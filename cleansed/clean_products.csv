@@ -1,0 +1,8 @@
+product_id,product_name,category,price,stock_quantity,supplier_id
+PROD001,Wireless Headphones,Electronics,25.5,100.0,SUP001
+PROD002,Coffee Mug,Home & Garden,15.99,50.0,SUP002
+PROD003,Notebook Set,Office Supplies,8.75,200.0,SUP001
+PROD004,Bluetooth Speaker,Electronics,19.99,75.0,SUP003
+PROD005,Travel Backpack,Travel,22.33,30.0,SUP002
+PROD008,Phone Case,Electronics,12.99,,SUP003
+PROD009,Desk Lamp,Home & Garden,34.5,15.0,

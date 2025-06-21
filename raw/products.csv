@@ -1,0 +1,11 @@
+product_id,product_name,category,price,stock_quantity,supplier_id
+PROD001, Wireless Headphones ,Electronics,25.50,100,SUP001
+PROD002,Coffee Mug,Home & Garden,15.99,50,SUP002
+PROD003,notebook set,Office Supplies,8.75,200,SUP001
+PROD004,bluetooth speaker,Electronics,19.99,75,SUP003
+PROD005,Travel Backpack,Travel,22.33,30,SUP002
+PROD001,Wireless Headphones Duplicate,Electronics,25.50,100,SUP001
+PROD006,,Electronics,29.99,25,SUP004
+PROD007,Water Bottle,Sports,-5.99,40,SUP002
+PROD008,Phone Case,Electronics,12.99,,SUP003
+PROD009,Desk Lamp,Home & Garden,34.50,15,

@@ -1,0 +1,6 @@
+order_id,order_date,customer_id,product_id,quantity,unit_price,total_amount,order_status,error_column,error_type
+ORD005,invalid_date,CUST004,PROD003,2,8.75,17.5,Processing,order_date,Invalid Date Format
+ORD003,2024-01-16,,PROD001,3,25.5,76.5,Shipped,customer_id,Value is Null
+ORD004,2024-01-17,CUST003,PROD999,1,12.0,12.0,Delivered,product_id,Product ID does not exist in Products table
+ORD006,2024-01-18,CUST005,PROD002,-1,15.99,-15.99,Cancelled,quantity,Value is not positive
+ORD009,2024-01-19,CUST008,PROD004,1,,19.99,Shipped,total_amount,Value is not a multiple of quantity and unit price
