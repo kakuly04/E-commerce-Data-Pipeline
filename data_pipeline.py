@@ -99,9 +99,9 @@ class DataPipeline:
                     valid_records = valid_records[~null_mask]
                     self.logger.warning(f"Null values found in column {column}")
 
-            
+            # Primary key validation should be unique and not null.
             elif rule == "primary_key":
-                duplicates_mask = valid_records.duplicated(subset=[column], keep = 'first')
+                duplicates_mask = valid_records.duplicated(subset=[column], keep = 'first') | valid_records[column].isnull()
                 if duplicates_mask.any():
                     error_df = valid_records[duplicates_mask].copy()
                     error_df["error_column"] = column
@@ -112,26 +112,28 @@ class DataPipeline:
                     valid_records = valid_records[~duplicates_mask]
                     self.logger.warning(f"Duplicate values found in primary key column {column}")
             
+            # Handling NaN values in non-negative columns as well.
             elif rule == "positive":
                 # valid_records[column] = valid_records[column].abs() --> Included this just in case we want to keep change the negative values to positive and keep them in valid records
-                negative_mask = (valid_records[column] <= 0)
+                negative_mask = (valid_records[column] <= 0) | (valid_records[column].isna())
                 if negative_mask.any():
                     error_df = valid_records[negative_mask].copy()
                     error_df["error_column"] = column
-                    error_df["error_type"] = "Value is not positive"
+                    error_df["error_type"] = "Value is not positive or is NaN"
                     error_records = pd.concat([error_records, error_df])
                     
                     # Remove negative or zero values from valid records
                     valid_records = valid_records[~negative_mask]
                     self.logger.warning(f"Negative or zero values found in column {column}")
             
+            # Handling NaN values in non-negative columns as well.
             elif rule == "non_negative":
                 # valid_records[column] = valid_records[column].abs() --> Included this just in case we want to keep change the negative values to positive and keep them in valid records
-                negative_mask = (valid_records[column] < 0)
+                negative_mask = (valid_records[column] < 0) | (valid_records[column].isna())
                 if negative_mask.any():
                     error_df = valid_records[negative_mask].copy()
                     error_df["error_column"] = column
-                    error_df["error_type"] = "Value is negative"
+                    error_df["error_type"] = "Value is negative or is NaN"
                     error_records = pd.concat([error_records, error_df])
                     
                     # Remove negative values from valid records
@@ -149,8 +151,8 @@ class DataPipeline:
                     # Remove invalid date format records from valid records
                     valid_records = valid_records[~invalid_date_mask]
                     self.logger.warning(f"Invalid date format found in column {column}")
-        
-            elif rule == "multiple_of_quantity_unit_price": # This rule should also eliminates those records in which price, quantity or amount are null. 
+            # This rule should also eliminate those order records in which price, quantity or amount are null. 
+            elif rule == "multiple_of_quantity_unit_price": 
                 if "quantity" in valid_records.columns and "unit_price" in valid_records.columns:
                     expected_amount = valid_records["quantity"] * valid_records["unit_price"]
                     invalid_mask = ~np.isclose(valid_records[column], expected_amount, rtol=0.02)
@@ -211,20 +213,28 @@ class DataPipeline:
             if col == "product_name":
                 df["product_name"] = df["product_name"].str.title()
 
-            # Standardizing text case (Upper Case for status)
-            elif col == "order_status":
-                df["order_status"] = df["order_status"].str.upper()
+            # Standardizing text case (Upper Case for status, order_id, product_id, customer_id, supplier_id)
+            elif col == "order_status" or col == "product_id" or col == "order_id" or col == "customer_id" or col == "supplier_id":
+                df[col] = df[col].str.upper()
         
             # Fixing common date format issues – Date Format should be DD-MM-YYYY
             elif col == "order_date":
+                # Coercing should handle any invalid date formats (NaT format)
                 df["order_date"] = pd.to_datetime(df["order_date"], errors='coerce').dt.strftime('%d-%m-%Y')
         
         return df
 
 
     
-    def curate_data(self, orders_df: pd.DataFrame, products_df: pd.DataFrame) -> Dict[str, pd.DataFrame]:
-        pass
+    def curate_data(self, orders_cleansed: pd.DataFrame, products_cleansed: pd.DataFrame) -> Dict[str, pd.DataFrame]:
+        aggregated_orders = orders_cleansed.groupby('product_id').agg(
+            total_orders=('order_id', 'count'),
+            total_quantity_sold=('quantity', 'sum'),
+            avg_order_quantity=('quantity', 'mean'),
+            total_revenue=('total_amount', 'sum'),
+            first_order_date=('order_date', 'min'),
+            last_order_date=('order_date', 'max')
+        ).reset_index()
 
     def log_errors(self, Table_name: str, error_records: pd.DataFrame):
         if error_records.empty:
@@ -248,8 +258,11 @@ class DataPipeline:
 
         # Step 2: Data Quality Validation
         self.logger.info("Starting data quality validation")
+        self.logger.info("# Cleaning products data first because products are referenced in orders (Product ID in orders must exist in products)")
+        # Cleaning products data first because products are referenced in orders (Product ID in orders must exist in products)
+        valid_products_df, product_errors_df = self.validate_data_quality(products_df, self.products_rules) 
         valid_orders_df, order_errors_df = self.validate_data_quality(orders_df, self.orders_rules)
-        valid_products_df, product_errors_df = self.validate_data_quality(products_df, self.products_rules)
+        
 
         self.log_errors("order_errors", order_errors_df)
         self.log_errors("products_errors", product_errors_df)
