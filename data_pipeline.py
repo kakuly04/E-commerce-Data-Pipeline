@@ -227,14 +227,37 @@ class DataPipeline:
 
     
     def curate_data(self, orders_cleansed: pd.DataFrame, products_cleansed: pd.DataFrame) -> Dict[str, pd.DataFrame]:
+        self.logger
         aggregated_orders = orders_cleansed.groupby('product_id').agg(
-            total_orders=('order_id', 'count'),
-            total_quantity_sold=('quantity', 'sum'),
-            avg_order_quantity=('quantity', 'mean'),
-            total_revenue=('total_amount', 'sum'),
-            first_order_date=('order_date', 'min'),
-            last_order_date=('order_date', 'max')
+            total_orders = ('order_id', 'count'),
+            total_quantity_sold = ('quantity', 'sum'),
+            avg_order_quantity = ('quantity', 'mean'),
+            total_revenue = ('total_amount', 'sum'),
+            first_order_date = ('order_date', 'min'),
+            last_order_date = ('order_date', 'max')
         ).reset_index()
+
+        self.logger.info("Aggregated orders data successfully")
+        # Performing the COALESCE operation to fill NaN values with 0 for total_orders, total_quantity_sold, avg_order_quantity, and total_revenue
+        product_performance_raw = pd.merge(products_cleansed, aggregated_orders, on = 'product_id', how = 'left')
+        product_performance_raw['total_orders'] = product_performance_raw['total_orders'].fillna(0).astype(int)
+        product_performance_raw['total_quantity_sold'] = product_performance_raw['total_quantity_sold'].fillna(0).astype(int)
+        product_performance_raw['avg_order_quantity'] = product_performance_raw['avg_order_quantity'].fillna(0).round(2)
+        product_performance_raw['total_revenue'] = product_performance_raw['total_revenue'].fillna(0).round(2)
+
+        product_performance_raw['last_order_date'] = pd.to_datetime(product_performance_raw['last_order_date'], errors='coerce')
+        product_performance_raw['days_since_last_order'] = (pd.Timestamp.now().normalize() - product_performance_raw['last_order_date']).dt.days
+
+        self.logger.info("Merged products and aggregated orders data successfully")
+        self.logger.info("Orders Curated DataFrame Successfully Created")
+        
+        self.logger.info("Calculating performance metrics for products")
+        self.logger.info("Calculating performance rank based on total revenue")
+        product_performance = product_performance_raw.copy()
+        # When using rank method min is used because SQL Rank function uses min method to assign the same rank to same values 
+        product_performance['performance_rank'] = product_performance['total_revenue'].rank(ascending=False, method='min').astype(int)
+        self.logger.info("Performance rank calculated successfully")
+        return {"curated_data": product_performance, "orders_curated": product_performance_raw}
 
     def log_errors(self, Table_name: str, error_records: pd.DataFrame):
         if error_records.empty:
@@ -278,6 +301,16 @@ class DataPipeline:
         clean_products = self.cleanse_data(valid_products_df)
         clean_orders.to_csv("cleansed/clean_orders.csv", index=False)
         clean_products.to_csv("cleansed/clean_products.csv", index=False)
+
+        # Step 4: Curating Data
+        self.logger.info("Starting data curation")
+        curated_data = self.curate_data(clean_orders, clean_products)
+        curated_data['curated_data'].to_csv("curated/product_performance_curated.csv", index=False)
+        curated_data['orders_curated'].to_csv("curated/orders_curated.csv", index=False)
+        self.logger.info("Data curation completed successfully")
+
+        # Step 5: Final Logging
+        self.logger.info("Data pipeline execution completed successfully")
         
 
 
