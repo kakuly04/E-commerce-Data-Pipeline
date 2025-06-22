@@ -6,6 +6,7 @@ import logging
 import os
 import re
 from typing import List, Dict, Tuple
+import json
 
 class DataPipeline:
     def __init__(self, config: Dict):
@@ -179,6 +180,7 @@ class DataPipeline:
                     valid_records = valid_records[~invalid_mask]
                     self.logger.warning(f"Invalid values found in column {column}: {valid_records[column][invalid_mask].unique()}")
             
+            # This rule should also eliminate those order records in which product_id is null.
             elif rule == "exists_in_products":
                 validation_products_df = pd.read_csv(self.product_path)
                 invalid_mask = ~valid_records[column].isin(validation_products_df['product_id'])
@@ -187,11 +189,11 @@ class DataPipeline:
                     error_df["error_column"] = column
                     error_df["error_type"] = "Product ID does not exist in Products table"
                     error_records = pd.concat([error_records, error_df])
-                    
+                    self.logger.warning(f"Product IDs not found in products DataFrame: {valid_records[column][invalid_mask].unique()}")
+
                     # Remove invalid records from valid records
                     valid_records = valid_records[~invalid_mask]
-                    self.logger.warning(f"Product IDs not found in products DataFrame: {valid_records[column][invalid_mask].unique()}")
-        
+                    
         error_records = error_records.drop_duplicates(subset=error_records.columns.tolist())
         return valid_records, error_records
          
@@ -220,8 +222,8 @@ class DataPipeline:
             # Fixing common date format issues – Date Format should be DD-MM-YYYY
             elif col == "order_date":
                 # Coercing should handle any invalid date formats (NaT format)
-                df["order_date"] = pd.to_datetime(df["order_date"], errors='coerce').dt.strftime('%d-%m-%Y')
-        
+                df["order_date"] = pd.to_datetime(df["order_date"], format = "%d-%m-%Y", errors = 'coerce', dayfirst = True)
+
         return df
 
 
@@ -313,31 +315,38 @@ class DataPipeline:
         self.logger.info("Data pipeline execution completed successfully")
         
 
+# ---------------------------------------------------------------------------------------------------------
+# Assumptions for the Configuration of the Data Pipeline
+# Assumings order_id is the primary key. Hence, it cannot be null and must be unique
+# Checking if order_date is in YYYY-MM-DD format
+# Assuming product_id also cannot be null - (An order must have a product)
+# Assuming quantity cannot be zero
+# Assuming price cannot be zero
+# product_id is the primary key. Hence, it cannot be null and must be unique
+# Assuming stock quantity cannot be negative, can be zero
+# ---------------------------------------------------------------------------------------------------------
 
+def main():
+    try:
+        with open("config.json", "r") as f:
+            # Loading configuration from a JSON file
+            config = json.load(f)
+            
+    except FileNotFoundError:
+        print("Config file not found: config.json Kindly ensure it exists in the working directory and re-run the script.")
+        config = {}
+        return
+    except json.JSONDecodeError as e:
+        print(f"Config file is not valid JSON: {e}. Kindly ensure it exists in the working directory and re-run the script.")
+        config = {}
+        return
+    except Exception as e:
+        print(f"Unexpected error while loading config: {e}. Kindly ensure it exists in the working directory and re-run the script.")
+        config = {}
+        return
 
-config = {
-    "orders_path": "raw/order.csv",
-    "products_path": "raw/products.csv",
-    'log_path': "logs/data_pipeline.log",
-    "orders_validation_rules": {
-        "order_id": "primary_key", # Assumings order_id is the primary key. Hence, it cannot be null and must be unique
-        "order_date": "check_date_format", # Checking if order_date is in YYYY-MM-DD format
-        "customer_id": "not_null",
-        "product_id": "not_null", # Assuming product_id also cannot be null - (An order must have a product)
-        "product_id": "exists_in_products",
-        "quantity": "positive", # Assuming quantity cannot be zero
-        "unit_price": "positive", # Assuming price cannot be zero
-        "total_amount": "multiple_of_quantity_unit_price",
-        "order_status": ["Pending", "Confirmed", "Cancelled", "Shipped", "Delivered","pending", "confirmed", "cancelled", "shipped", "delivered"] # Assuming these are the only valid statuses
-    },
-    "products_validation_rules": {
-        "product_id": "primary_key", #product_id is the primary key. Hence, it cannot be null and must be unique
-        "product_name": "not_null",
-        "category": "not_null",
-        "price": "positive",
-        "stock_quantity": "non_negative" # Assuming stock quantity cannot be negative, can be zero
-    }
-}
+    pipeline = DataPipeline(config)
+    pipeline.run_pipeline()
 
-pipeline = DataPipeline(config)
-pipeline.run_pipeline()
+if __name__ == "__main__":
+    main()

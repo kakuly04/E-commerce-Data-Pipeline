@@ -1,0 +1,22 @@
+{
+    "orders_path": "raw/order.csv",
+    "products_path": "raw/products.csv",
+    "log_path": "logs/data_pipeline.log",
+    "orders_validation_rules": {
+        "order_id": "primary_key",
+        "order_date": "check_date_format", 
+        "customer_id": "not_null",
+        "product_id": "exists_in_products",
+        "quantity": "positive",
+        "unit_price": "positive", 
+        "total_amount": "multiple_of_quantity_unit_price",
+        "order_status": ["Pending", "Confirmed", "Cancelled", "Shipped", "Delivered","pending", "confirmed", "cancelled", "shipped", "delivered"]
+    },
+    "products_validation_rules": {
+        "product_id": "primary_key", 
+        "product_name": "not_null",
+        "category": "not_null",
+        "price": "positive",
+        "stock_quantity": "non_negative"
+    }
+}
