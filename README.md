@@ -119,11 +119,11 @@ Ensure you're inside the project’s virtual environment, and that `config.json`
 ## 🔍 Assumptions
 
 * `order_id` and `product_id` are primary keys in their respective datasets
-* `order_date` should be in `%Y-%m-%d` format
+* `order_date` should be in `%Y-%m-%d` format - then converted to `%d-%m-%Y`
 * `quantity`, `price`, and `unit_price` should be positive
 * `stock_quantity` can be zero but not negative
 * `total_amount` should be within 2% of `quantity × unit_price`
-
+* Check Comments in the Code for other Assumptions
 ---
 
 ## 🔧 Requirements
