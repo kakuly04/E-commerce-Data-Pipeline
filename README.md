@@ -94,16 +94,16 @@ Ensure you're inside the project’s virtual environment, and that `config.json`
 
 ## ✅ Validation Rules Supported
 
-| Rule                              | Description                                                       |
-| --------------------------------- | ----------------------------------------------------------------- |
-| `not_null`                        | Value must not be missing                                         |
-| `primary_key`                     | Must be unique and not null                                       |
-| `positive`                        | Must be > 0                                                       |
-| `non_negative`                    | Must be ≥ 0                                                       |
-| `check_date_format`               | Validates date format `%Y-%m-%d`                                  |
-| `multiple_of_quantity_unit_price` | Checks if `total_amount ≈ quantity × unit_price` (±2%)            |
-| `exists_in_products`              | Ensures `product_id` exists in products table                     |
-| `[list of values]`                | Column must match one of the listed values (e.g., `order_status`) |
+| Rule                              | Description                                                                |
+| --------------------------------- | -------------------------------------------------------------------------- |
+| `not_null`                        | Value must not be missing - NaN replaces with defaults                     |
+| `primary_key`                     | Must be unique and not null                                                |
+| `positive`                        | Must be ≥ 0                                                                |
+| `non_negative`                    | Must be ≥ 0                                                                |
+| `check_date_format`               | Validates date format `%Y-%m-%d` - invalid date replaced with today's date |
+| `multiple_of_quantity_unit_price` | Checks if `total_amount ≈ quantity × unit_price` (±2%)                     |
+| `exists_in_products`              | Ensures `product_id` exists in products table                              |
+| `[list of values]`                | Column must match one of the listed values (e.g., `order_status`)          |
 
 ---
 
