@@ -78,7 +78,7 @@ Ensure you're inside the project’s virtual environment, and that `config.json`
         "quantity": "positive",
         "unit_price": "positive", 
         "total_amount": "multiple_of_quantity_unit_price",
-        "order_status": ["Pending", "Confirmed", "Cancelled", "Shipped", "Delivered","pending", "confirmed", "cancelled", "shipped", "delivered"]
+        "order_status": ["Pending", "Confirmed", "Cancelled", "Shipped", "Delivered"]
     },
     "products_validation_rules": {
         "product_id": "primary_key", 
@@ -98,8 +98,8 @@ Ensure you're inside the project’s virtual environment, and that `config.json`
 | --------------------------------- | -------------------------------------------------------------------------- |
 | `not_null`                        | Value must not be missing - NaN replaces with defaults                     |
 | `primary_key`                     | Must be unique and not null                                                |
-| `positive`                        | Must be ≥ 0                                                                |
-| `non_negative`                    | Must be ≥ 0                                                                |
+| `positive`                        | Must be > 0 - invalid values replaced with absolute value                  |
+| `non_negative`                    | Must be ≥ 0 - invalid values replaced with absolute value                  |
 | `check_date_format`               | Validates date format `%Y-%m-%d` - invalid date replaced with today's date |
 | `multiple_of_quantity_unit_price` | Checks if `total_amount ≈ quantity × unit_price` (±2%)                     |
 | `exists_in_products`              | Ensures `product_id` exists in products table                              |
