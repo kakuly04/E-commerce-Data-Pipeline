@@ -1,10 +1,9 @@
 order_id,order_date,customer_id,product_id,quantity,unit_price,total_amount,order_status,error_column,error_type
 ,2024-01-19,CUST007,PROD003,4,8.75,35.0,Pending,order_id,Duplicates of Primary key or NaN is not allowed
 ORD005,invalid_date,CUST004,PROD003,2,8.75,17.5,Processing,order_date,"Invalid Date Format, defaulting to today's date temporarily"
-ORD003,2024-01-16,CUSTXXX,PROD001,3,25.5,76.5,Shipped,customer_id,Value is null. Default value added temporarily
+ORD003,2024-01-16,,PROD001,3,25.5,76.5,Shipped,customer_id,customer_id Value is null. Default value being added temporarily
 ORD004,2024-01-17,CUST003,PROD999,1,12.0,12.0,Delivered,product_id,Product ID does not exist in Products table
 ORD006,2024-01-18,CUST005,PROD002,-1,15.99,-15.99,Cancelled,quantity,Value is not positive or is NaN. Default value added temporarily
 ORD009,2024-01-19,CUST008,PROD004,1,,19.99,Shipped,unit_price,Value is not positive or is NaN. Default value added temporarily
-ORD006,2024-01-18,CUST005,PROD002,1,15.99,-15.99,Cancelled,total_amount,Value is not a multiple of quantity and unit price
 ORD009,2024-01-19,CUST008,PROD004,1,,19.99,Shipped,total_amount,Value is not a multiple of quantity and unit price
 ORD005,2025-06-24,CUST004,PROD003,2,8.75,17.5,Processing,order_status,Invalid Status value

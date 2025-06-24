@@ -1183,3 +1183,688 @@ stock_quantity    9.0  70.555556  57.741041  15.00  30.00  50.00  100.0  200.0
 2025-06-24 17:40:25,491 - INFO - Performance rank calculated successfully
 2025-06-24 17:40:25,494 - INFO - Data curation completed successfully
 2025-06-24 17:40:25,495 - INFO - Data pipeline execution completed successfully
+2025-06-24 17:51:03,487 - INFO - Starting data pipeline execution
+2025-06-24 17:51:03,487 - INFO - Reading raw data from CSV files
+2025-06-24 17:51:03,497 - INFO - Raw data read successfully
+2025-06-24 17:51:03,497 - INFO - Orders DataFrame Columns: ['order_id', 'order_date', 'customer_id', 'product_id', 'quantity', 'unit_price', 'total_amount', 'order_status']
+2025-06-24 17:51:03,497 - INFO - Orders DataFrame Column DataTypes: {'order_id': dtype('O'), 'order_date': dtype('O'), 'customer_id': dtype('O'), 'product_id': dtype('O'), 'quantity': dtype('int64'), 'unit_price': dtype('float64'), 'total_amount': dtype('float64'), 'order_status': dtype('O')}
+2025-06-24 17:51:03,498 - INFO - Orders DataFrame Missing Values: {'order_id': 1, 'order_date': 0, 'customer_id': 1, 'product_id': 0, 'quantity': 0, 'unit_price': 1, 'total_amount': 0, 'order_status': 0}
+2025-06-24 17:51:03,504 - INFO - Orders DataFrame Duplicates: 0
+2025-06-24 17:51:03,504 - INFO - Orders DataFrame Unique Values:
+{'order_id': 9, 'order_date': 7, 'customer_id': 9, 'product_id': 6, 'quantity': 5, 'unit_price': 5, 'total_amount': 10, 'order_status': 7}
+2025-06-24 17:51:03,512 - INFO - Orders DataFrame Head:
+  order_id    order_date customer_id product_id  quantity  unit_price  total_amount order_status
+0   ORD001    2024-01-15     CUST001    PROD001         2       25.50         51.00    Confirmed
+1   ORD002    2024-01-16     CUST002    PROD002         1       15.99         15.99      Pending
+2   ORD003    2024-01-16         NaN    PROD001         3       25.50         76.50      Shipped
+3   ORD004    2024-01-17     CUST003    PROD999         1       12.00         12.00    Delivered
+4   ORD005  invalid_date     CUST004    PROD003         2        8.75         17.50   Processing
+2025-06-24 17:51:03,512 - INFO - Orders DataFrame Shape: (10, 8)
+2025-06-24 17:51:03,523 - INFO - Orders DataFrame Basic Statistics:
+              count       mean        std    min      25%     50%    75%   max
+quantity       10.0   1.800000   1.398412  -1.00   1.0000   2.000   2.75   4.0
+unit_price      9.0  17.812222   7.092133   8.75  12.0000  15.990  25.50  25.5
+total_amount   10.0  32.898000  28.292787 -15.99  16.3675  27.495  50.75  76.5
+2025-06-24 17:51:03,523 - INFO - Products DataFrame Columns: ['product_id', 'product_name', 'category', 'price', 'stock_quantity', 'supplier_id']
+2025-06-24 17:51:03,523 - INFO - Products DataFrame Column DataTypes: {'product_id': dtype('O'), 'product_name': dtype('O'), 'category': dtype('O'), 'price': dtype('float64'), 'stock_quantity': dtype('float64'), 'supplier_id': dtype('O')}
+2025-06-24 17:51:03,524 - INFO - Products DataFrame Missing Values: {'product_id': 0, 'product_name': 1, 'category': 0, 'price': 0, 'stock_quantity': 1, 'supplier_id': 1}
+2025-06-24 17:51:03,524 - INFO - Products DataFrame Duplicates: 0
+2025-06-24 17:51:03,525 - INFO - Products DataFrame Unique Values:
+{'product_id': 9, 'product_name': 9, 'category': 5, 'price': 9, 'stock_quantity': 8, 'supplier_id': 4}
+2025-06-24 17:51:03,528 - INFO - Products DataFrame Head:
+  product_id           product_name         category  price  stock_quantity supplier_id
+0    PROD001   Wireless Headphones       Electronics  25.50           100.0      SUP001
+1    PROD002             Coffee Mug    Home & Garden  15.99            50.0      SUP002
+2    PROD003           notebook set  Office Supplies   8.75           200.0      SUP001
+3    PROD004      bluetooth speaker      Electronics  19.99            75.0      SUP003
+4    PROD005        Travel Backpack           Travel  22.33            30.0      SUP002
+2025-06-24 17:51:03,528 - INFO - Products DataFrame Shape: (10, 6)
+2025-06-24 17:51:03,535 - INFO - Products DataFrame Basic Statistics:
+                count       mean        std    min    25%    50%    75%    max
+price            10.0  18.955000  11.701480  -5.99  13.74  21.16   25.5   34.5
+stock_quantity    9.0  70.555556  57.741041  15.00  30.00  50.00  100.0  200.0
+2025-06-24 17:51:03,535 - INFO - Raw data loaded successfully
+2025-06-24 17:51:03,535 - INFO - Starting data quality validation
+2025-06-24 17:51:03,535 - INFO - # Validating products data first because products are referenced in orders (Product ID in orders must exist in products)
+2025-06-24 17:51:03,542 - WARNING - Rows with NaN values in primary key column - product_id are removed
+2025-06-24 17:51:03,542 - WARNING - Duplicate and NaN values found in primary key column product_id
+2025-06-24 17:51:03,544 - WARNING - Null values found in column product_name
+2025-06-24 17:51:03,546 - WARNING - Negative or zero values found in column price
+2025-06-24 17:51:03,550 - WARNING - Negative values found in column stock_quantity
+2025-06-24 17:51:03,551 - WARNING - Null values found in column supplier_id
+2025-06-24 17:51:03,552 - INFO - Starting data quality validation of Orders data
+2025-06-24 17:51:03,555 - WARNING - Rows with NaN values in primary key column - order_id are removed
+2025-06-24 17:51:03,555 - WARNING - Duplicate and NaN values found in primary key column order_id
+2025-06-24 17:51:03,555 - INFO - Validating data quality
+2025-06-24 17:51:03,557 - INFO - Validating data quality
+2025-06-24 17:51:03,557 - INFO - Validating data quality
+2025-06-24 17:51:03,557 - INFO - Validating data quality
+2025-06-24 17:51:03,557 - INFO - Validating data quality
+2025-06-24 17:51:03,558 - INFO - Validating data quality
+2025-06-24 17:51:03,558 - INFO - Validating data quality
+2025-06-24 17:51:03,558 - INFO - Validating data quality
+2025-06-24 17:51:03,558 - INFO - Validating data quality
+2025-06-24 17:51:03,561 - WARNING - Invalid date format found in column order_date; replaced with today's date
+2025-06-24 17:51:03,562 - WARNING - Null values found in column customer_id
+2025-06-24 17:51:03,565 - WARNING - Product IDs not found in products DataFrame: ['PROD999']
+2025-06-24 17:51:03,566 - WARNING - Negative or zero values found in column quantity
+2025-06-24 17:51:03,567 - WARNING - Negative or zero values found in column unit_price
+2025-06-24 17:51:03,569 - WARNING - Invalid total amount found in column total_amount
+2025-06-24 17:51:03,573 - WARNING - Invalid values found in column order_status: []
+2025-06-24 17:51:03,576 - WARNING - Logged 8 erroneous records to logs/order_errors_error_records.csv
+2025-06-24 17:51:03,576 - WARNING - Logged 5 erroneous records to logs/products_errors_error_records.csv
+2025-06-24 17:51:03,576 - INFO - Data validation completed successfully
+2025-06-24 17:51:03,576 - INFO - Starting data cleansing
+2025-06-24 17:51:03,584 - INFO - Starting data curation
+2025-06-24 17:51:03,595 - INFO - Aggregated orders data successfully
+2025-06-24 17:51:03,601 - INFO - Merged products and aggregated orders data successfully
+2025-06-24 17:51:03,601 - INFO - Orders Curated DataFrame Successfully Created
+2025-06-24 17:51:03,601 - INFO - Calculating performance metrics for products
+2025-06-24 17:51:03,601 - INFO - Calculating performance rank based on total revenue
+2025-06-24 17:51:03,603 - INFO - Performance rank calculated successfully
+2025-06-24 17:51:03,605 - INFO - Data curation completed successfully
+2025-06-24 17:51:03,605 - INFO - Data pipeline execution completed successfully
+2025-06-24 17:56:49,229 - INFO - Starting data pipeline execution
+2025-06-24 17:56:49,229 - INFO - Reading raw data from CSV files
+2025-06-24 17:56:49,239 - INFO - Raw data read successfully
+2025-06-24 17:56:49,239 - INFO - Orders DataFrame Columns: ['order_id', 'order_date', 'customer_id', 'product_id', 'quantity', 'unit_price', 'total_amount', 'order_status']
+2025-06-24 17:56:49,239 - INFO - Orders DataFrame Column DataTypes: {'order_id': dtype('O'), 'order_date': dtype('O'), 'customer_id': dtype('O'), 'product_id': dtype('O'), 'quantity': dtype('int64'), 'unit_price': dtype('float64'), 'total_amount': dtype('float64'), 'order_status': dtype('O')}
+2025-06-24 17:56:49,241 - INFO - Orders DataFrame Missing Values: {'order_id': 1, 'order_date': 0, 'customer_id': 1, 'product_id': 0, 'quantity': 0, 'unit_price': 1, 'total_amount': 0, 'order_status': 0}
+2025-06-24 17:56:49,246 - INFO - Orders DataFrame Duplicates: 0
+2025-06-24 17:56:49,247 - INFO - Orders DataFrame Unique Values:
+{'order_id': 9, 'order_date': 7, 'customer_id': 9, 'product_id': 6, 'quantity': 5, 'unit_price': 5, 'total_amount': 10, 'order_status': 7}
+2025-06-24 17:56:49,257 - INFO - Orders DataFrame Head:
+  order_id    order_date customer_id product_id  quantity  unit_price  total_amount order_status
+0   ORD001    2024-01-15     CUST001    PROD001         2       25.50         51.00    Confirmed
+1   ORD002    2024-01-16     CUST002    PROD002         1       15.99         15.99      Pending
+2   ORD003    2024-01-16         NaN    PROD001         3       25.50         76.50      Shipped
+3   ORD004    2024-01-17     CUST003    PROD999         1       12.00         12.00    Delivered
+4   ORD005  invalid_date     CUST004    PROD003         2        8.75         17.50   Processing
+2025-06-24 17:56:49,257 - INFO - Orders DataFrame Shape: (10, 8)
+2025-06-24 17:56:49,274 - INFO - Orders DataFrame Basic Statistics:
+              count       mean        std    min      25%     50%    75%   max
+quantity       10.0   1.800000   1.398412  -1.00   1.0000   2.000   2.75   4.0
+unit_price      9.0  17.812222   7.092133   8.75  12.0000  15.990  25.50  25.5
+total_amount   10.0  32.898000  28.292787 -15.99  16.3675  27.495  50.75  76.5
+2025-06-24 17:56:49,274 - INFO - Products DataFrame Columns: ['product_id', 'product_name', 'category', 'price', 'stock_quantity', 'supplier_id']
+2025-06-24 17:56:49,275 - INFO - Products DataFrame Column DataTypes: {'product_id': dtype('O'), 'product_name': dtype('O'), 'category': dtype('O'), 'price': dtype('float64'), 'stock_quantity': dtype('float64'), 'supplier_id': dtype('O')}
+2025-06-24 17:56:49,275 - INFO - Products DataFrame Missing Values: {'product_id': 0, 'product_name': 1, 'category': 0, 'price': 0, 'stock_quantity': 1, 'supplier_id': 1}
+2025-06-24 17:56:49,275 - INFO - Products DataFrame Duplicates: 0
+2025-06-24 17:56:49,276 - INFO - Products DataFrame Unique Values:
+{'product_id': 9, 'product_name': 9, 'category': 5, 'price': 9, 'stock_quantity': 8, 'supplier_id': 4}
+2025-06-24 17:56:49,281 - INFO - Products DataFrame Head:
+  product_id           product_name         category  price  stock_quantity supplier_id
+0    PROD001   Wireless Headphones       Electronics  25.50           100.0      SUP001
+1    PROD002             Coffee Mug    Home & Garden  15.99            50.0      SUP002
+2    PROD003           notebook set  Office Supplies   8.75           200.0      SUP001
+3    PROD004      bluetooth speaker      Electronics  19.99            75.0      SUP003
+4    PROD005        Travel Backpack           Travel  22.33            30.0      SUP002
+2025-06-24 17:56:49,281 - INFO - Products DataFrame Shape: (10, 6)
+2025-06-24 17:56:49,288 - INFO - Products DataFrame Basic Statistics:
+                count       mean        std    min    25%    50%    75%    max
+price            10.0  18.955000  11.701480  -5.99  13.74  21.16   25.5   34.5
+stock_quantity    9.0  70.555556  57.741041  15.00  30.00  50.00  100.0  200.0
+2025-06-24 17:56:49,288 - INFO - Raw data loaded successfully
+2025-06-24 17:56:49,288 - INFO - Starting data quality validation
+2025-06-24 17:56:49,288 - INFO - # Validating products data first because products are referenced in orders (Product ID in orders must exist in products)
+2025-06-24 17:56:49,292 - WARNING - Rows with NaN values in primary key column - product_id are removed
+2025-06-24 17:56:49,292 - WARNING - Duplicate and NaN values found in primary key column product_id
+2025-06-24 17:56:49,293 - WARNING - Null values found in column product_name
+2025-06-24 17:56:49,294 - WARNING - Negative or zero values found in column price
+2025-06-24 17:56:49,298 - WARNING - Negative values found in column stock_quantity
+2025-06-24 17:56:49,299 - WARNING - Null values found in column supplier_id
+2025-06-24 17:56:49,300 - INFO - Starting data quality validation of Orders data
+2025-06-24 17:56:49,303 - WARNING - Rows with NaN values in primary key column - order_id are removed
+2025-06-24 17:56:49,303 - WARNING - Duplicate and NaN values found in primary key column order_id
+2025-06-24 17:56:49,303 - INFO - Validating data quality
+2025-06-24 17:56:49,306 - INFO - Validating data quality
+2025-06-24 17:56:49,306 - INFO - Validating data quality
+2025-06-24 17:56:49,306 - INFO - Validating data quality
+2025-06-24 17:56:49,306 - INFO - Validating data quality
+2025-06-24 17:56:49,307 - INFO - Validating data quality
+2025-06-24 17:56:49,307 - INFO - Validating data quality
+2025-06-24 17:56:49,308 - INFO - Validating data quality
+2025-06-24 17:56:49,308 - INFO - Validating data quality
+2025-06-24 17:56:49,311 - WARNING - Invalid date format found in column order_date; replaced with today's date
+2025-06-24 17:56:49,313 - WARNING - Null values found in column customer_id
+2025-06-24 17:56:49,316 - WARNING - Product IDs not found in products DataFrame: ['PROD999']
+2025-06-24 17:56:49,317 - WARNING - Negative or zero values found in column quantity
+2025-06-24 17:56:49,323 - WARNING - Negative or zero values found in column unit_price
+2025-06-24 17:56:49,325 - WARNING - Invalid total amount found in column total_amount
+2025-06-24 17:56:49,328 - WARNING - Invalid values found in column order_status: []
+2025-06-24 17:56:49,330 - WARNING - Logged 8 erroneous records to logs/order_errors_error_records.csv
+2025-06-24 17:56:49,331 - WARNING - Logged 5 erroneous records to logs/products_errors_error_records.csv
+2025-06-24 17:56:49,331 - INFO - Data validation completed successfully
+2025-06-24 17:56:49,331 - INFO - Starting data cleansing
+2025-06-24 17:56:49,337 - INFO - Starting data curation
+2025-06-24 17:56:49,347 - INFO - Aggregated orders data successfully
+2025-06-24 17:56:49,353 - INFO - Merged products and aggregated orders data successfully
+2025-06-24 17:56:49,353 - INFO - Orders Curated DataFrame Successfully Created
+2025-06-24 17:56:49,353 - INFO - Calculating performance metrics for products
+2025-06-24 17:56:49,353 - INFO - Calculating performance rank based on total revenue
+2025-06-24 17:56:49,355 - INFO - Performance rank calculated successfully
+2025-06-24 17:56:49,356 - INFO - Data curation completed successfully
+2025-06-24 17:56:49,356 - INFO - Data pipeline execution completed successfully
+2025-06-24 18:00:48,206 - INFO - Starting data pipeline execution
+2025-06-24 18:00:48,206 - INFO - Reading raw data from CSV files
+2025-06-24 18:00:48,215 - INFO - Raw data read successfully
+2025-06-24 18:00:48,215 - INFO - Orders DataFrame Columns: ['order_id', 'order_date', 'customer_id', 'product_id', 'quantity', 'unit_price', 'total_amount', 'order_status']
+2025-06-24 18:00:48,215 - INFO - Orders DataFrame Column DataTypes: {'order_id': dtype('O'), 'order_date': dtype('O'), 'customer_id': dtype('O'), 'product_id': dtype('O'), 'quantity': dtype('int64'), 'unit_price': dtype('float64'), 'total_amount': dtype('float64'), 'order_status': dtype('O')}
+2025-06-24 18:00:48,217 - INFO - Orders DataFrame Missing Values: {'order_id': 1, 'order_date': 0, 'customer_id': 1, 'product_id': 0, 'quantity': 0, 'unit_price': 1, 'total_amount': 0, 'order_status': 0}
+2025-06-24 18:00:48,222 - INFO - Orders DataFrame Duplicates: 0
+2025-06-24 18:00:48,223 - INFO - Orders DataFrame Unique Values:
+{'order_id': 9, 'order_date': 7, 'customer_id': 9, 'product_id': 6, 'quantity': 5, 'unit_price': 5, 'total_amount': 10, 'order_status': 7}
+2025-06-24 18:00:48,231 - INFO - Orders DataFrame Head:
+  order_id    order_date customer_id product_id  quantity  unit_price  total_amount order_status
+0   ORD001    2024-01-15     CUST001    PROD001         2       25.50         51.00    Confirmed
+1   ORD002    2024-01-16     CUST002    PROD002         1       15.99         15.99      Pending
+2   ORD003    2024-01-16         NaN    PROD001         3       25.50         76.50      Shipped
+3   ORD004    2024-01-17     CUST003    PROD999         1       12.00         12.00    Delivered
+4   ORD005  invalid_date     CUST004    PROD003         2        8.75         17.50   Processing
+2025-06-24 18:00:48,231 - INFO - Orders DataFrame Shape: (10, 8)
+2025-06-24 18:00:48,243 - INFO - Orders DataFrame Basic Statistics:
+              count       mean        std    min      25%     50%    75%   max
+quantity       10.0   1.800000   1.398412  -1.00   1.0000   2.000   2.75   4.0
+unit_price      9.0  17.812222   7.092133   8.75  12.0000  15.990  25.50  25.5
+total_amount   10.0  32.898000  28.292787 -15.99  16.3675  27.495  50.75  76.5
+2025-06-24 18:00:48,243 - INFO - Products DataFrame Columns: ['product_id', 'product_name', 'category', 'price', 'stock_quantity', 'supplier_id']
+2025-06-24 18:00:48,243 - INFO - Products DataFrame Column DataTypes: {'product_id': dtype('O'), 'product_name': dtype('O'), 'category': dtype('O'), 'price': dtype('float64'), 'stock_quantity': dtype('float64'), 'supplier_id': dtype('O')}
+2025-06-24 18:00:48,243 - INFO - Products DataFrame Missing Values: {'product_id': 0, 'product_name': 1, 'category': 0, 'price': 0, 'stock_quantity': 1, 'supplier_id': 1}
+2025-06-24 18:00:48,244 - INFO - Products DataFrame Duplicates: 0
+2025-06-24 18:00:48,244 - INFO - Products DataFrame Unique Values:
+{'product_id': 9, 'product_name': 9, 'category': 5, 'price': 9, 'stock_quantity': 8, 'supplier_id': 4}
+2025-06-24 18:00:48,249 - INFO - Products DataFrame Head:
+  product_id           product_name         category  price  stock_quantity supplier_id
+0    PROD001   Wireless Headphones       Electronics  25.50           100.0      SUP001
+1    PROD002             Coffee Mug    Home & Garden  15.99            50.0      SUP002
+2    PROD003           notebook set  Office Supplies   8.75           200.0      SUP001
+3    PROD004      bluetooth speaker      Electronics  19.99            75.0      SUP003
+4    PROD005        Travel Backpack           Travel  22.33            30.0      SUP002
+2025-06-24 18:00:48,249 - INFO - Products DataFrame Shape: (10, 6)
+2025-06-24 18:00:48,256 - INFO - Products DataFrame Basic Statistics:
+                count       mean        std    min    25%    50%    75%    max
+price            10.0  18.955000  11.701480  -5.99  13.74  21.16   25.5   34.5
+stock_quantity    9.0  70.555556  57.741041  15.00  30.00  50.00  100.0  200.0
+2025-06-24 18:00:48,256 - INFO - Raw data loaded successfully
+2025-06-24 18:00:48,256 - INFO - Starting data quality validation
+2025-06-24 18:00:48,256 - INFO - # Validating products data first because products are referenced in orders (Product ID in orders must exist in products)
+2025-06-24 18:00:48,260 - WARNING - Rows with NaN values in primary key column - product_id are removed
+2025-06-24 18:00:48,260 - WARNING - Duplicate and NaN values found in primary key column product_id
+2025-06-24 18:00:48,262 - WARNING - Null values found in column product_name
+2025-06-24 18:00:48,263 - WARNING - Negative or zero values found in column price
+2025-06-24 18:00:48,265 - WARNING - Negative values found in column stock_quantity
+2025-06-24 18:00:48,267 - WARNING - Null values found in column supplier_id
+2025-06-24 18:00:48,268 - INFO - Starting data quality validation of Orders data
+2025-06-24 18:00:48,270 - WARNING - Rows with NaN values in primary key column - order_id are removed
+2025-06-24 18:00:48,270 - WARNING - Duplicate and NaN values found in primary key column order_id
+2025-06-24 18:00:48,270 - INFO - Validating data quality
+2025-06-24 18:00:48,272 - INFO - Validating data quality
+2025-06-24 18:00:48,272 - INFO - Validating data quality
+2025-06-24 18:00:48,273 - INFO - Validating data quality
+2025-06-24 18:00:48,273 - INFO - Validating data quality
+2025-06-24 18:00:48,273 - INFO - Validating data quality
+2025-06-24 18:00:48,273 - INFO - Validating data quality
+2025-06-24 18:00:48,273 - INFO - Validating data quality
+2025-06-24 18:00:48,273 - INFO - Validating data quality
+2025-06-24 18:00:48,276 - ERROR - Error during pipeline execution: 'Timestamp' object has no attribute 'dt'
+Traceback (most recent call last):
+  File "/Users/kakuly/Documents/GitHub/E-commerce-Data-Pipeline/data_pipeline.py", line 373, in main
+    pipeline.run_pipeline()
+  File "/Users/kakuly/Documents/GitHub/E-commerce-Data-Pipeline/data_pipeline.py", line 312, in run_pipeline
+    valid_orders_df, order_errors_df = self.validate_data_quality(orders_df, self.orders_rules)
+                                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/kakuly/Documents/GitHub/E-commerce-Data-Pipeline/data_pipeline.py", line 170, in validate_data_quality
+    today_date = pd.to_datetime("today").normalize().dt.date
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'Timestamp' object has no attribute 'dt'
+2025-06-24 18:03:50,495 - INFO - Starting data pipeline execution
+2025-06-24 18:03:50,495 - INFO - Reading raw data from CSV files
+2025-06-24 18:03:50,498 - INFO - Raw data read successfully
+2025-06-24 18:03:50,498 - INFO - Orders DataFrame Columns: ['order_id', 'order_date', 'customer_id', 'product_id', 'quantity', 'unit_price', 'total_amount', 'order_status']
+2025-06-24 18:03:50,498 - INFO - Orders DataFrame Column DataTypes: {'order_id': dtype('O'), 'order_date': dtype('O'), 'customer_id': dtype('O'), 'product_id': dtype('O'), 'quantity': dtype('int64'), 'unit_price': dtype('float64'), 'total_amount': dtype('float64'), 'order_status': dtype('O')}
+2025-06-24 18:03:50,499 - INFO - Orders DataFrame Missing Values: {'order_id': 1, 'order_date': 0, 'customer_id': 1, 'product_id': 0, 'quantity': 0, 'unit_price': 1, 'total_amount': 0, 'order_status': 0}
+2025-06-24 18:03:50,500 - INFO - Orders DataFrame Duplicates: 0
+2025-06-24 18:03:50,501 - INFO - Orders DataFrame Unique Values:
+{'order_id': 9, 'order_date': 7, 'customer_id': 9, 'product_id': 6, 'quantity': 5, 'unit_price': 5, 'total_amount': 10, 'order_status': 7}
+2025-06-24 18:03:50,507 - INFO - Orders DataFrame Head:
+  order_id    order_date customer_id product_id  quantity  unit_price  total_amount order_status
+0   ORD001    2024-01-15     CUST001    PROD001         2       25.50         51.00    Confirmed
+1   ORD002    2024-01-16     CUST002    PROD002         1       15.99         15.99      Pending
+2   ORD003    2024-01-16         NaN    PROD001         3       25.50         76.50      Shipped
+3   ORD004    2024-01-17     CUST003    PROD999         1       12.00         12.00    Delivered
+4   ORD005  invalid_date     CUST004    PROD003         2        8.75         17.50   Processing
+2025-06-24 18:03:50,507 - INFO - Orders DataFrame Shape: (10, 8)
+2025-06-24 18:03:50,518 - INFO - Orders DataFrame Basic Statistics:
+              count       mean        std    min      25%     50%    75%   max
+quantity       10.0   1.800000   1.398412  -1.00   1.0000   2.000   2.75   4.0
+unit_price      9.0  17.812222   7.092133   8.75  12.0000  15.990  25.50  25.5
+total_amount   10.0  32.898000  28.292787 -15.99  16.3675  27.495  50.75  76.5
+2025-06-24 18:03:50,518 - INFO - Products DataFrame Columns: ['product_id', 'product_name', 'category', 'price', 'stock_quantity', 'supplier_id']
+2025-06-24 18:03:50,518 - INFO - Products DataFrame Column DataTypes: {'product_id': dtype('O'), 'product_name': dtype('O'), 'category': dtype('O'), 'price': dtype('float64'), 'stock_quantity': dtype('float64'), 'supplier_id': dtype('O')}
+2025-06-24 18:03:50,518 - INFO - Products DataFrame Missing Values: {'product_id': 0, 'product_name': 1, 'category': 0, 'price': 0, 'stock_quantity': 1, 'supplier_id': 1}
+2025-06-24 18:03:50,519 - INFO - Products DataFrame Duplicates: 0
+2025-06-24 18:03:50,519 - INFO - Products DataFrame Unique Values:
+{'product_id': 9, 'product_name': 9, 'category': 5, 'price': 9, 'stock_quantity': 8, 'supplier_id': 4}
+2025-06-24 18:03:50,524 - INFO - Products DataFrame Head:
+  product_id           product_name         category  price  stock_quantity supplier_id
+0    PROD001   Wireless Headphones       Electronics  25.50           100.0      SUP001
+1    PROD002             Coffee Mug    Home & Garden  15.99            50.0      SUP002
+2    PROD003           notebook set  Office Supplies   8.75           200.0      SUP001
+3    PROD004      bluetooth speaker      Electronics  19.99            75.0      SUP003
+4    PROD005        Travel Backpack           Travel  22.33            30.0      SUP002
+2025-06-24 18:03:50,524 - INFO - Products DataFrame Shape: (10, 6)
+2025-06-24 18:03:50,532 - INFO - Products DataFrame Basic Statistics:
+                count       mean        std    min    25%    50%    75%    max
+price            10.0  18.955000  11.701480  -5.99  13.74  21.16   25.5   34.5
+stock_quantity    9.0  70.555556  57.741041  15.00  30.00  50.00  100.0  200.0
+2025-06-24 18:03:50,532 - INFO - Raw data loaded successfully
+2025-06-24 18:03:50,532 - INFO - Starting data quality validation
+2025-06-24 18:03:50,532 - INFO - # Validating products data first because products are referenced in orders (Product ID in orders must exist in products)
+2025-06-24 18:03:50,535 - WARNING - Rows with NaN values in primary key column - product_id are removed
+2025-06-24 18:03:50,535 - WARNING - Duplicate and NaN values found in primary key column product_id
+2025-06-24 18:03:50,536 - WARNING - Null values found in column product_name
+2025-06-24 18:03:50,537 - WARNING - Negative or zero values found in column price
+2025-06-24 18:03:50,539 - WARNING - Negative values found in column stock_quantity
+2025-06-24 18:03:50,540 - WARNING - Null values found in column supplier_id
+2025-06-24 18:03:50,540 - INFO - Starting data quality validation of Orders data
+2025-06-24 18:03:50,544 - WARNING - Rows with NaN values in primary key column - order_id are removed
+2025-06-24 18:03:50,544 - WARNING - Duplicate and NaN values found in primary key column order_id
+2025-06-24 18:03:50,544 - INFO - Validating data quality
+2025-06-24 18:03:50,544 - INFO - Validating data quality
+2025-06-24 18:03:50,545 - INFO - Validating data quality
+2025-06-24 18:03:50,545 - INFO - Validating data quality
+2025-06-24 18:03:50,545 - INFO - Validating data quality
+2025-06-24 18:03:50,545 - INFO - Validating data quality
+2025-06-24 18:03:50,545 - INFO - Validating data quality
+2025-06-24 18:03:50,545 - INFO - Validating data quality
+2025-06-24 18:03:50,545 - INFO - Validating data quality
+2025-06-24 18:03:50,547 - ERROR - Error during pipeline execution: 'Timestamp' object has no attribute 'dt'
+Traceback (most recent call last):
+  File "/Users/kakuly/Documents/GitHub/E-commerce-Data-Pipeline/data_pipeline.py", line 374, in main
+    pipeline.run_pipeline()
+  File "/Users/kakuly/Documents/GitHub/E-commerce-Data-Pipeline/data_pipeline.py", line 313, in run_pipeline
+    valid_orders_df, order_errors_df = self.validate_data_quality(orders_df, self.orders_rules)
+                                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/kakuly/Documents/GitHub/E-commerce-Data-Pipeline/data_pipeline.py", line 170, in validate_data_quality
+    today_date = pd.to_datetime("today").normalize().dt.date
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'Timestamp' object has no attribute 'dt'
+2025-06-24 18:06:02,307 - INFO - Starting data pipeline execution
+2025-06-24 18:06:02,308 - INFO - Reading raw data from CSV files
+2025-06-24 18:06:02,317 - INFO - Raw data read successfully
+2025-06-24 18:06:02,317 - INFO - Orders DataFrame Columns: ['order_id', 'order_date', 'customer_id', 'product_id', 'quantity', 'unit_price', 'total_amount', 'order_status']
+2025-06-24 18:06:02,317 - INFO - Orders DataFrame Column DataTypes: {'order_id': dtype('O'), 'order_date': dtype('O'), 'customer_id': dtype('O'), 'product_id': dtype('O'), 'quantity': dtype('int64'), 'unit_price': dtype('float64'), 'total_amount': dtype('float64'), 'order_status': dtype('O')}
+2025-06-24 18:06:02,319 - INFO - Orders DataFrame Missing Values: {'order_id': 1, 'order_date': 0, 'customer_id': 1, 'product_id': 0, 'quantity': 0, 'unit_price': 1, 'total_amount': 0, 'order_status': 0}
+2025-06-24 18:06:02,323 - INFO - Orders DataFrame Duplicates: 0
+2025-06-24 18:06:02,324 - INFO - Orders DataFrame Unique Values:
+{'order_id': 9, 'order_date': 7, 'customer_id': 9, 'product_id': 6, 'quantity': 5, 'unit_price': 5, 'total_amount': 10, 'order_status': 7}
+2025-06-24 18:06:02,331 - INFO - Orders DataFrame Head:
+  order_id    order_date customer_id product_id  quantity  unit_price  total_amount order_status
+0   ORD001    2024-01-15     CUST001    PROD001         2       25.50         51.00    Confirmed
+1   ORD002    2024-01-16     CUST002    PROD002         1       15.99         15.99      Pending
+2   ORD003    2024-01-16         NaN    PROD001         3       25.50         76.50      Shipped
+3   ORD004    2024-01-17     CUST003    PROD999         1       12.00         12.00    Delivered
+4   ORD005  invalid_date     CUST004    PROD003         2        8.75         17.50   Processing
+2025-06-24 18:06:02,331 - INFO - Orders DataFrame Shape: (10, 8)
+2025-06-24 18:06:02,342 - INFO - Orders DataFrame Basic Statistics:
+              count       mean        std    min      25%     50%    75%   max
+quantity       10.0   1.800000   1.398412  -1.00   1.0000   2.000   2.75   4.0
+unit_price      9.0  17.812222   7.092133   8.75  12.0000  15.990  25.50  25.5
+total_amount   10.0  32.898000  28.292787 -15.99  16.3675  27.495  50.75  76.5
+2025-06-24 18:06:02,342 - INFO - Products DataFrame Columns: ['product_id', 'product_name', 'category', 'price', 'stock_quantity', 'supplier_id']
+2025-06-24 18:06:02,342 - INFO - Products DataFrame Column DataTypes: {'product_id': dtype('O'), 'product_name': dtype('O'), 'category': dtype('O'), 'price': dtype('float64'), 'stock_quantity': dtype('float64'), 'supplier_id': dtype('O')}
+2025-06-24 18:06:02,342 - INFO - Products DataFrame Missing Values: {'product_id': 0, 'product_name': 1, 'category': 0, 'price': 0, 'stock_quantity': 1, 'supplier_id': 1}
+2025-06-24 18:06:02,343 - INFO - Products DataFrame Duplicates: 0
+2025-06-24 18:06:02,343 - INFO - Products DataFrame Unique Values:
+{'product_id': 9, 'product_name': 9, 'category': 5, 'price': 9, 'stock_quantity': 8, 'supplier_id': 4}
+2025-06-24 18:06:02,347 - INFO - Products DataFrame Head:
+  product_id           product_name         category  price  stock_quantity supplier_id
+0    PROD001   Wireless Headphones       Electronics  25.50           100.0      SUP001
+1    PROD002             Coffee Mug    Home & Garden  15.99            50.0      SUP002
+2    PROD003           notebook set  Office Supplies   8.75           200.0      SUP001
+3    PROD004      bluetooth speaker      Electronics  19.99            75.0      SUP003
+4    PROD005        Travel Backpack           Travel  22.33            30.0      SUP002
+2025-06-24 18:06:02,347 - INFO - Products DataFrame Shape: (10, 6)
+2025-06-24 18:06:02,355 - INFO - Products DataFrame Basic Statistics:
+                count       mean        std    min    25%    50%    75%    max
+price            10.0  18.955000  11.701480  -5.99  13.74  21.16   25.5   34.5
+stock_quantity    9.0  70.555556  57.741041  15.00  30.00  50.00  100.0  200.0
+2025-06-24 18:06:02,355 - INFO - Raw data loaded successfully
+2025-06-24 18:06:02,355 - INFO - Starting data quality validation
+2025-06-24 18:06:02,355 - INFO - # Validating products data first because products are referenced in orders (Product ID in orders must exist in products)
+2025-06-24 18:06:02,359 - WARNING - Rows with NaN values in primary key column - product_id are removed
+2025-06-24 18:06:02,359 - WARNING - Duplicate and NaN values found in primary key column product_id
+2025-06-24 18:06:02,360 - WARNING - Null values found in column product_name
+2025-06-24 18:06:02,361 - WARNING - Negative or zero values found in column price
+2025-06-24 18:06:02,363 - WARNING - Negative values found in column stock_quantity
+2025-06-24 18:06:02,364 - WARNING - Null values found in column supplier_id
+2025-06-24 18:06:02,365 - INFO - Starting data quality validation of Orders data
+2025-06-24 18:06:02,368 - WARNING - Rows with NaN values in primary key column - order_id are removed
+2025-06-24 18:06:02,368 - WARNING - Duplicate and NaN values found in primary key column order_id
+2025-06-24 18:06:02,368 - INFO - Validating data quality
+2025-06-24 18:06:02,370 - INFO - Validating data quality
+2025-06-24 18:06:02,370 - INFO - Validating data quality
+2025-06-24 18:06:02,370 - INFO - Validating data quality
+2025-06-24 18:06:02,370 - INFO - Validating data quality
+2025-06-24 18:06:02,371 - INFO - Validating data quality
+2025-06-24 18:06:02,371 - INFO - Validating data quality
+2025-06-24 18:06:02,371 - INFO - Validating data quality
+2025-06-24 18:06:02,372 - INFO - Validating data quality
+2025-06-24 18:06:02,374 - ERROR - Error during pipeline execution: 'Timestamp' object has no attribute 'dt'
+Traceback (most recent call last):
+  File "/Users/kakuly/Documents/GitHub/E-commerce-Data-Pipeline/data_pipeline.py", line 374, in main
+    pipeline.run_pipeline()
+  File "/Users/kakuly/Documents/GitHub/E-commerce-Data-Pipeline/data_pipeline.py", line 313, in run_pipeline
+    valid_orders_df, order_errors_df = self.validate_data_quality(orders_df, self.orders_rules)
+                                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/kakuly/Documents/GitHub/E-commerce-Data-Pipeline/data_pipeline.py", line 170, in validate_data_quality
+    today_date = pd.to_datetime("today").normalize().dt.date
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'Timestamp' object has no attribute 'dt'
+2025-06-24 18:07:55,581 - INFO - Starting data pipeline execution
+2025-06-24 18:07:55,583 - INFO - Reading raw data from CSV files
+2025-06-24 18:07:55,592 - INFO - Raw data read successfully
+2025-06-24 18:07:55,593 - INFO - Orders DataFrame Columns: ['order_id', 'order_date', 'customer_id', 'product_id', 'quantity', 'unit_price', 'total_amount', 'order_status']
+2025-06-24 18:07:55,593 - INFO - Orders DataFrame Column DataTypes: {'order_id': dtype('O'), 'order_date': dtype('O'), 'customer_id': dtype('O'), 'product_id': dtype('O'), 'quantity': dtype('int64'), 'unit_price': dtype('float64'), 'total_amount': dtype('float64'), 'order_status': dtype('O')}
+2025-06-24 18:07:55,594 - INFO - Orders DataFrame Missing Values: {'order_id': 1, 'order_date': 0, 'customer_id': 1, 'product_id': 0, 'quantity': 0, 'unit_price': 1, 'total_amount': 0, 'order_status': 0}
+2025-06-24 18:07:55,601 - INFO - Orders DataFrame Duplicates: 0
+2025-06-24 18:07:55,602 - INFO - Orders DataFrame Unique Values:
+{'order_id': 9, 'order_date': 7, 'customer_id': 9, 'product_id': 6, 'quantity': 5, 'unit_price': 5, 'total_amount': 10, 'order_status': 7}
+2025-06-24 18:07:55,610 - INFO - Orders DataFrame Head:
+  order_id    order_date customer_id product_id  quantity  unit_price  total_amount order_status
+0   ORD001    2024-01-15     CUST001    PROD001         2       25.50         51.00    Confirmed
+1   ORD002    2024-01-16     CUST002    PROD002         1       15.99         15.99      Pending
+2   ORD003    2024-01-16         NaN    PROD001         3       25.50         76.50      Shipped
+3   ORD004    2024-01-17     CUST003    PROD999         1       12.00         12.00    Delivered
+4   ORD005  invalid_date     CUST004    PROD003         2        8.75         17.50   Processing
+2025-06-24 18:07:55,610 - INFO - Orders DataFrame Shape: (10, 8)
+2025-06-24 18:07:55,623 - INFO - Orders DataFrame Basic Statistics:
+              count       mean        std    min      25%     50%    75%   max
+quantity       10.0   1.800000   1.398412  -1.00   1.0000   2.000   2.75   4.0
+unit_price      9.0  17.812222   7.092133   8.75  12.0000  15.990  25.50  25.5
+total_amount   10.0  32.898000  28.292787 -15.99  16.3675  27.495  50.75  76.5
+2025-06-24 18:07:55,623 - INFO - Products DataFrame Columns: ['product_id', 'product_name', 'category', 'price', 'stock_quantity', 'supplier_id']
+2025-06-24 18:07:55,623 - INFO - Products DataFrame Column DataTypes: {'product_id': dtype('O'), 'product_name': dtype('O'), 'category': dtype('O'), 'price': dtype('float64'), 'stock_quantity': dtype('float64'), 'supplier_id': dtype('O')}
+2025-06-24 18:07:55,624 - INFO - Products DataFrame Missing Values: {'product_id': 0, 'product_name': 1, 'category': 0, 'price': 0, 'stock_quantity': 1, 'supplier_id': 1}
+2025-06-24 18:07:55,624 - INFO - Products DataFrame Duplicates: 0
+2025-06-24 18:07:55,625 - INFO - Products DataFrame Unique Values:
+{'product_id': 9, 'product_name': 9, 'category': 5, 'price': 9, 'stock_quantity': 8, 'supplier_id': 4}
+2025-06-24 18:07:55,630 - INFO - Products DataFrame Head:
+  product_id           product_name         category  price  stock_quantity supplier_id
+0    PROD001   Wireless Headphones       Electronics  25.50           100.0      SUP001
+1    PROD002             Coffee Mug    Home & Garden  15.99            50.0      SUP002
+2    PROD003           notebook set  Office Supplies   8.75           200.0      SUP001
+3    PROD004      bluetooth speaker      Electronics  19.99            75.0      SUP003
+4    PROD005        Travel Backpack           Travel  22.33            30.0      SUP002
+2025-06-24 18:07:55,630 - INFO - Products DataFrame Shape: (10, 6)
+2025-06-24 18:07:55,637 - INFO - Products DataFrame Basic Statistics:
+                count       mean        std    min    25%    50%    75%    max
+price            10.0  18.955000  11.701480  -5.99  13.74  21.16   25.5   34.5
+stock_quantity    9.0  70.555556  57.741041  15.00  30.00  50.00  100.0  200.0
+2025-06-24 18:07:55,638 - INFO - Raw data loaded successfully
+2025-06-24 18:07:55,638 - INFO - Starting data quality validation
+2025-06-24 18:07:55,638 - INFO - # Validating products data first because products are referenced in orders (Product ID in orders must exist in products)
+2025-06-24 18:07:55,644 - WARNING - Rows with NaN values in primary key column - product_id are removed
+2025-06-24 18:07:55,644 - WARNING - Duplicate and NaN values found in primary key column product_id
+2025-06-24 18:07:55,645 - WARNING - Null values found in column product_name
+2025-06-24 18:07:55,646 - WARNING - Negative or zero values found in column price
+2025-06-24 18:07:55,650 - WARNING - Negative values found in column stock_quantity
+2025-06-24 18:07:55,651 - WARNING - Null values found in column supplier_id
+2025-06-24 18:07:55,652 - INFO - Starting data quality validation of Orders data
+2025-06-24 18:07:55,654 - WARNING - Rows with NaN values in primary key column - order_id are removed
+2025-06-24 18:07:55,654 - WARNING - Duplicate and NaN values found in primary key column order_id
+2025-06-24 18:07:55,655 - INFO - Validating data quality
+2025-06-24 18:07:55,656 - INFO - Validating data quality
+2025-06-24 18:07:55,657 - INFO - Validating data quality
+2025-06-24 18:07:55,657 - INFO - Validating data quality
+2025-06-24 18:07:55,657 - INFO - Validating data quality
+2025-06-24 18:07:55,657 - INFO - Validating data quality
+2025-06-24 18:07:55,658 - INFO - Validating data quality
+2025-06-24 18:07:55,658 - INFO - Validating data quality
+2025-06-24 18:07:55,658 - INFO - Validating data quality
+2025-06-24 18:07:55,660 - ERROR - Error during pipeline execution: 'Timestamp' object has no attribute 'dt'
+Traceback (most recent call last):
+  File "/Users/kakuly/Documents/GitHub/E-commerce-Data-Pipeline/data_pipeline.py", line 372, in main
+    pipeline.run_pipeline()
+  File "/Users/kakuly/Documents/GitHub/E-commerce-Data-Pipeline/data_pipeline.py", line 311, in run_pipeline
+    valid_orders_df, order_errors_df = self.validate_data_quality(orders_df, self.orders_rules)
+                                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/kakuly/Documents/GitHub/E-commerce-Data-Pipeline/data_pipeline.py", line 170, in validate_data_quality
+    today_date = pd.to_datetime("today").normalize().dt.date
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'Timestamp' object has no attribute 'dt'
+2025-06-24 18:09:19,008 - INFO - Starting data pipeline execution
+2025-06-24 18:09:19,008 - INFO - Reading raw data from CSV files
+2025-06-24 18:09:19,017 - INFO - Raw data read successfully
+2025-06-24 18:09:19,017 - INFO - Orders DataFrame Columns: ['order_id', 'order_date', 'customer_id', 'product_id', 'quantity', 'unit_price', 'total_amount', 'order_status']
+2025-06-24 18:09:19,018 - INFO - Orders DataFrame Column DataTypes: {'order_id': dtype('O'), 'order_date': dtype('O'), 'customer_id': dtype('O'), 'product_id': dtype('O'), 'quantity': dtype('int64'), 'unit_price': dtype('float64'), 'total_amount': dtype('float64'), 'order_status': dtype('O')}
+2025-06-24 18:09:19,019 - INFO - Orders DataFrame Missing Values: {'order_id': 1, 'order_date': 0, 'customer_id': 1, 'product_id': 0, 'quantity': 0, 'unit_price': 1, 'total_amount': 0, 'order_status': 0}
+2025-06-24 18:09:19,024 - INFO - Orders DataFrame Duplicates: 0
+2025-06-24 18:09:19,025 - INFO - Orders DataFrame Unique Values:
+{'order_id': 9, 'order_date': 7, 'customer_id': 9, 'product_id': 6, 'quantity': 5, 'unit_price': 5, 'total_amount': 10, 'order_status': 7}
+2025-06-24 18:09:19,033 - INFO - Orders DataFrame Head:
+  order_id    order_date customer_id product_id  quantity  unit_price  total_amount order_status
+0   ORD001    2024-01-15     CUST001    PROD001         2       25.50         51.00    Confirmed
+1   ORD002    2024-01-16     CUST002    PROD002         1       15.99         15.99      Pending
+2   ORD003    2024-01-16         NaN    PROD001         3       25.50         76.50      Shipped
+3   ORD004    2024-01-17     CUST003    PROD999         1       12.00         12.00    Delivered
+4   ORD005  invalid_date     CUST004    PROD003         2        8.75         17.50   Processing
+2025-06-24 18:09:19,033 - INFO - Orders DataFrame Shape: (10, 8)
+2025-06-24 18:09:19,045 - INFO - Orders DataFrame Basic Statistics:
+              count       mean        std    min      25%     50%    75%   max
+quantity       10.0   1.800000   1.398412  -1.00   1.0000   2.000   2.75   4.0
+unit_price      9.0  17.812222   7.092133   8.75  12.0000  15.990  25.50  25.5
+total_amount   10.0  32.898000  28.292787 -15.99  16.3675  27.495  50.75  76.5
+2025-06-24 18:09:19,045 - INFO - Products DataFrame Columns: ['product_id', 'product_name', 'category', 'price', 'stock_quantity', 'supplier_id']
+2025-06-24 18:09:19,046 - INFO - Products DataFrame Column DataTypes: {'product_id': dtype('O'), 'product_name': dtype('O'), 'category': dtype('O'), 'price': dtype('float64'), 'stock_quantity': dtype('float64'), 'supplier_id': dtype('O')}
+2025-06-24 18:09:19,046 - INFO - Products DataFrame Missing Values: {'product_id': 0, 'product_name': 1, 'category': 0, 'price': 0, 'stock_quantity': 1, 'supplier_id': 1}
+2025-06-24 18:09:19,047 - INFO - Products DataFrame Duplicates: 0
+2025-06-24 18:09:19,047 - INFO - Products DataFrame Unique Values:
+{'product_id': 9, 'product_name': 9, 'category': 5, 'price': 9, 'stock_quantity': 8, 'supplier_id': 4}
+2025-06-24 18:09:19,052 - INFO - Products DataFrame Head:
+  product_id           product_name         category  price  stock_quantity supplier_id
+0    PROD001   Wireless Headphones       Electronics  25.50           100.0      SUP001
+1    PROD002             Coffee Mug    Home & Garden  15.99            50.0      SUP002
+2    PROD003           notebook set  Office Supplies   8.75           200.0      SUP001
+3    PROD004      bluetooth speaker      Electronics  19.99            75.0      SUP003
+4    PROD005        Travel Backpack           Travel  22.33            30.0      SUP002
+2025-06-24 18:09:19,052 - INFO - Products DataFrame Shape: (10, 6)
+2025-06-24 18:09:19,060 - INFO - Products DataFrame Basic Statistics:
+                count       mean        std    min    25%    50%    75%    max
+price            10.0  18.955000  11.701480  -5.99  13.74  21.16   25.5   34.5
+stock_quantity    9.0  70.555556  57.741041  15.00  30.00  50.00  100.0  200.0
+2025-06-24 18:09:19,060 - INFO - Raw data loaded successfully
+2025-06-24 18:09:19,060 - INFO - Starting data quality validation
+2025-06-24 18:09:19,060 - INFO - # Validating products data first because products are referenced in orders (Product ID in orders must exist in products)
+2025-06-24 18:09:19,064 - WARNING - Rows with NaN values in primary key column - product_id are removed
+2025-06-24 18:09:19,064 - WARNING - Duplicate and NaN values found in primary key column product_id
+2025-06-24 18:09:19,066 - WARNING - Null values found in column product_name
+2025-06-24 18:09:19,067 - WARNING - Negative or zero values found in column price
+2025-06-24 18:09:19,069 - WARNING - Negative values found in column stock_quantity
+2025-06-24 18:09:19,071 - WARNING - Null values found in column supplier_id
+2025-06-24 18:09:19,072 - INFO - Starting data quality validation of Orders data
+2025-06-24 18:09:19,074 - WARNING - Rows with NaN values in primary key column - order_id are removed
+2025-06-24 18:09:19,074 - WARNING - Duplicate and NaN values found in primary key column order_id
+2025-06-24 18:09:19,074 - INFO - Validating data quality
+2025-06-24 18:09:19,075 - INFO - Validating data quality
+2025-06-24 18:09:19,076 - INFO - Validating data quality
+2025-06-24 18:09:19,076 - INFO - Validating data quality
+2025-06-24 18:09:19,076 - INFO - Validating data quality
+2025-06-24 18:09:19,076 - INFO - Validating data quality
+2025-06-24 18:09:19,076 - INFO - Validating data quality
+2025-06-24 18:09:19,076 - INFO - Validating data quality
+2025-06-24 18:09:19,077 - INFO - Validating data quality
+2025-06-24 18:09:19,078 - ERROR - Error during pipeline execution: 'Timestamp' object has no attribute 'dt'
+Traceback (most recent call last):
+  File "/Users/kakuly/Documents/GitHub/E-commerce-Data-Pipeline/data_pipeline.py", line 372, in main
+    pipeline.run_pipeline()
+  File "/Users/kakuly/Documents/GitHub/E-commerce-Data-Pipeline/data_pipeline.py", line 311, in run_pipeline
+    valid_orders_df, order_errors_df = self.validate_data_quality(orders_df, self.orders_rules)
+                                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/kakuly/Documents/GitHub/E-commerce-Data-Pipeline/data_pipeline.py", line 170, in validate_data_quality
+    today_date = pd.to_datetime("today").normalize().dt.date
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'Timestamp' object has no attribute 'dt'
+2025-06-24 18:28:39,108 - INFO - Starting data pipeline execution
+2025-06-24 18:28:39,109 - INFO - Reading raw data from CSV files
+2025-06-24 18:28:39,120 - INFO - Raw data read successfully
+2025-06-24 18:28:39,120 - INFO - Orders DataFrame Columns: ['order_id', 'order_date', 'customer_id', 'product_id', 'quantity', 'unit_price', 'total_amount', 'order_status']
+2025-06-24 18:28:39,121 - INFO - Orders DataFrame Column DataTypes: {'order_id': dtype('O'), 'order_date': dtype('O'), 'customer_id': dtype('O'), 'product_id': dtype('O'), 'quantity': dtype('int64'), 'unit_price': dtype('float64'), 'total_amount': dtype('float64'), 'order_status': dtype('O')}
+2025-06-24 18:28:39,122 - INFO - Orders DataFrame Missing Values: {'order_id': 1, 'order_date': 0, 'customer_id': 1, 'product_id': 0, 'quantity': 0, 'unit_price': 1, 'total_amount': 0, 'order_status': 0}
+2025-06-24 18:28:39,127 - INFO - Orders DataFrame Duplicates: 0
+2025-06-24 18:28:39,128 - INFO - Orders DataFrame Unique Values:
+{'order_id': 9, 'order_date': 7, 'customer_id': 9, 'product_id': 6, 'quantity': 5, 'unit_price': 5, 'total_amount': 10, 'order_status': 7}
+2025-06-24 18:28:39,140 - INFO - Orders DataFrame Head:
+  order_id    order_date customer_id product_id  quantity  unit_price  total_amount order_status
+0   ORD001    2024-01-15     CUST001    PROD001         2       25.50         51.00    Confirmed
+1   ORD002    2024-01-16     CUST002    PROD002         1       15.99         15.99      Pending
+2   ORD003    2024-01-16         NaN    PROD001         3       25.50         76.50      Shipped
+3   ORD004    2024-01-17     CUST003    PROD999         1       12.00         12.00    Delivered
+4   ORD005  invalid_date     CUST004    PROD003         2        8.75         17.50   Processing
+2025-06-24 18:28:39,140 - INFO - Orders DataFrame Shape: (10, 8)
+2025-06-24 18:28:39,157 - INFO - Orders DataFrame Basic Statistics:
+              count       mean        std    min      25%     50%    75%   max
+quantity       10.0   1.800000   1.398412  -1.00   1.0000   2.000   2.75   4.0
+unit_price      9.0  17.812222   7.092133   8.75  12.0000  15.990  25.50  25.5
+total_amount   10.0  32.898000  28.292787 -15.99  16.3675  27.495  50.75  76.5
+2025-06-24 18:28:39,157 - INFO - Products DataFrame Columns: ['product_id', 'product_name', 'category', 'price', 'stock_quantity', 'supplier_id']
+2025-06-24 18:28:39,157 - INFO - Products DataFrame Column DataTypes: {'product_id': dtype('O'), 'product_name': dtype('O'), 'category': dtype('O'), 'price': dtype('float64'), 'stock_quantity': dtype('float64'), 'supplier_id': dtype('O')}
+2025-06-24 18:28:39,157 - INFO - Products DataFrame Missing Values: {'product_id': 0, 'product_name': 1, 'category': 0, 'price': 0, 'stock_quantity': 1, 'supplier_id': 1}
+2025-06-24 18:28:39,158 - INFO - Products DataFrame Duplicates: 0
+2025-06-24 18:28:39,159 - INFO - Products DataFrame Unique Values:
+{'product_id': 9, 'product_name': 9, 'category': 5, 'price': 9, 'stock_quantity': 8, 'supplier_id': 4}
+2025-06-24 18:28:39,164 - INFO - Products DataFrame Head:
+  product_id           product_name         category  price  stock_quantity supplier_id
+0    PROD001   Wireless Headphones       Electronics  25.50           100.0      SUP001
+1    PROD002             Coffee Mug    Home & Garden  15.99            50.0      SUP002
+2    PROD003           notebook set  Office Supplies   8.75           200.0      SUP001
+3    PROD004      bluetooth speaker      Electronics  19.99            75.0      SUP003
+4    PROD005        Travel Backpack           Travel  22.33            30.0      SUP002
+2025-06-24 18:28:39,164 - INFO - Products DataFrame Shape: (10, 6)
+2025-06-24 18:28:39,175 - INFO - Products DataFrame Basic Statistics:
+                count       mean        std    min    25%    50%    75%    max
+price            10.0  18.955000  11.701480  -5.99  13.74  21.16   25.5   34.5
+stock_quantity    9.0  70.555556  57.741041  15.00  30.00  50.00  100.0  200.0
+2025-06-24 18:28:39,175 - INFO - Raw data loaded successfully
+2025-06-24 18:28:39,176 - INFO - Starting data quality validation
+2025-06-24 18:28:39,176 - INFO - # Validating products data first because products are referenced in orders (Product ID in orders must exist in products)
+2025-06-24 18:28:39,180 - WARNING - Rows with NaN values in primary key column - product_id are removed
+2025-06-24 18:28:39,180 - WARNING - Duplicate and NaN values found in primary key column product_id
+2025-06-24 18:28:39,181 - WARNING - Null values found in column product_name
+2025-06-24 18:28:39,184 - WARNING - Negative or zero values found in column price
+2025-06-24 18:28:39,187 - WARNING - Negative values found in column stock_quantity
+2025-06-24 18:28:39,188 - WARNING - Null values found in column supplier_id
+2025-06-24 18:28:39,190 - INFO - Starting data quality validation of Orders data
+2025-06-24 18:28:39,194 - WARNING - Rows with NaN values in primary key column - order_id are removed
+2025-06-24 18:28:39,194 - WARNING - Duplicate and NaN values found in primary key column order_id
+2025-06-24 18:28:39,194 - INFO - Validating data quality
+2025-06-24 18:28:39,196 - INFO - Validating data quality
+2025-06-24 18:28:39,196 - INFO - Validating data quality
+2025-06-24 18:28:39,196 - INFO - Validating data quality
+2025-06-24 18:28:39,197 - INFO - Validating data quality
+2025-06-24 18:28:39,197 - INFO - Validating data quality
+2025-06-24 18:28:39,197 - INFO - Validating data quality
+2025-06-24 18:28:39,197 - INFO - Validating data quality
+2025-06-24 18:28:39,197 - INFO - Validating data quality
+2025-06-24 18:28:39,199 - WARNING - Invalid date format found in column order_date; replaced with today's date
+2025-06-24 18:28:39,201 - WARNING - Null values found in column customer_id
+2025-06-24 18:28:39,206 - WARNING - Product IDs not found in products DataFrame: ['PROD999']
+2025-06-24 18:28:39,208 - WARNING - Negative or zero values found in column quantity
+2025-06-24 18:28:39,210 - WARNING - Negative or zero values found in column unit_price
+2025-06-24 18:28:39,212 - WARNING - Invalid total amount found in column total_amount
+2025-06-24 18:28:39,215 - WARNING - Invalid values found in column order_status: []
+2025-06-24 18:28:39,218 - WARNING - Logged 8 erroneous records to logs/order_errors_error_records.csv
+2025-06-24 18:28:39,219 - WARNING - Logged 5 erroneous records to logs/products_errors_error_records.csv
+2025-06-24 18:28:39,219 - INFO - Data validation completed successfully
+2025-06-24 18:28:39,219 - INFO - Starting data cleansing
+2025-06-24 18:28:39,230 - INFO - Starting data curation
+2025-06-24 18:28:39,243 - INFO - Aggregated orders data successfully
+2025-06-24 18:28:39,249 - INFO - Merged products and aggregated orders data successfully
+2025-06-24 18:28:39,249 - INFO - Orders Curated DataFrame Successfully Created
+2025-06-24 18:28:39,249 - INFO - Calculating performance metrics for products
+2025-06-24 18:28:39,249 - INFO - Calculating performance rank based on total revenue
+2025-06-24 18:28:39,251 - INFO - Performance rank calculated successfully
+2025-06-24 18:28:39,253 - INFO - Data curation completed successfully
+2025-06-24 18:28:39,254 - INFO - Data pipeline execution completed successfully
+2025-06-24 18:39:16,035 - INFO - Starting data pipeline execution
+2025-06-24 18:39:16,036 - INFO - Reading raw data from CSV files
+2025-06-24 18:39:16,048 - INFO - Raw data read successfully
+2025-06-24 18:39:16,048 - INFO - Orders DataFrame Columns: ['order_id', 'order_date', 'customer_id', 'product_id', 'quantity', 'unit_price', 'total_amount', 'order_status']
+2025-06-24 18:39:16,048 - INFO - Orders DataFrame Column DataTypes: {'order_id': dtype('O'), 'order_date': dtype('O'), 'customer_id': dtype('O'), 'product_id': dtype('O'), 'quantity': dtype('int64'), 'unit_price': dtype('float64'), 'total_amount': dtype('float64'), 'order_status': dtype('O')}
+2025-06-24 18:39:16,050 - INFO - Orders DataFrame Missing Values: {'order_id': 1, 'order_date': 0, 'customer_id': 1, 'product_id': 0, 'quantity': 0, 'unit_price': 1, 'total_amount': 0, 'order_status': 0}
+2025-06-24 18:39:16,055 - INFO - Orders DataFrame Duplicates: 0
+2025-06-24 18:39:16,056 - INFO - Orders DataFrame Unique Values:
+{'order_id': 9, 'order_date': 7, 'customer_id': 9, 'product_id': 6, 'quantity': 5, 'unit_price': 5, 'total_amount': 10, 'order_status': 7}
+2025-06-24 18:39:16,066 - INFO - Orders DataFrame Head:
+  order_id    order_date customer_id product_id  quantity  unit_price  total_amount order_status
+0   ORD001    2024-01-15     CUST001    PROD001         2       25.50         51.00    Confirmed
+1   ORD002    2024-01-16     CUST002    PROD002         1       15.99         15.99      Pending
+2   ORD003    2024-01-16         NaN    PROD001         3       25.50         76.50      Shipped
+3   ORD004    2024-01-17     CUST003    PROD999         1       12.00         12.00    Delivered
+4   ORD005  invalid_date     CUST004    PROD003         2        8.75         17.50   Processing
+2025-06-24 18:39:16,066 - INFO - Orders DataFrame Shape: (10, 8)
+2025-06-24 18:39:16,078 - INFO - Orders DataFrame Basic Statistics:
+              count       mean        std    min      25%     50%    75%   max
+quantity       10.0   1.800000   1.398412  -1.00   1.0000   2.000   2.75   4.0
+unit_price      9.0  17.812222   7.092133   8.75  12.0000  15.990  25.50  25.5
+total_amount   10.0  32.898000  28.292787 -15.99  16.3675  27.495  50.75  76.5
+2025-06-24 18:39:16,078 - INFO - Products DataFrame Columns: ['product_id', 'product_name', 'category', 'price', 'stock_quantity', 'supplier_id']
+2025-06-24 18:39:16,078 - INFO - Products DataFrame Column DataTypes: {'product_id': dtype('O'), 'product_name': dtype('O'), 'category': dtype('O'), 'price': dtype('float64'), 'stock_quantity': dtype('float64'), 'supplier_id': dtype('O')}
+2025-06-24 18:39:16,079 - INFO - Products DataFrame Missing Values: {'product_id': 0, 'product_name': 1, 'category': 0, 'price': 0, 'stock_quantity': 1, 'supplier_id': 1}
+2025-06-24 18:39:16,079 - INFO - Products DataFrame Duplicates: 0
+2025-06-24 18:39:16,080 - INFO - Products DataFrame Unique Values:
+{'product_id': 9, 'product_name': 9, 'category': 5, 'price': 9, 'stock_quantity': 8, 'supplier_id': 4}
+2025-06-24 18:39:16,085 - INFO - Products DataFrame Head:
+  product_id           product_name         category  price  stock_quantity supplier_id
+0    PROD001   Wireless Headphones       Electronics  25.50           100.0      SUP001
+1    PROD002             Coffee Mug    Home & Garden  15.99            50.0      SUP002
+2    PROD003           notebook set  Office Supplies   8.75           200.0      SUP001
+3    PROD004      bluetooth speaker      Electronics  19.99            75.0      SUP003
+4    PROD005        Travel Backpack           Travel  22.33            30.0      SUP002
+2025-06-24 18:39:16,085 - INFO - Products DataFrame Shape: (10, 6)
+2025-06-24 18:39:16,093 - INFO - Products DataFrame Basic Statistics:
+                count       mean        std    min    25%    50%    75%    max
+price            10.0  18.955000  11.701480  -5.99  13.74  21.16   25.5   34.5
+stock_quantity    9.0  70.555556  57.741041  15.00  30.00  50.00  100.0  200.0
+2025-06-24 18:39:16,093 - INFO - Raw data loaded successfully
+2025-06-24 18:39:16,093 - INFO - Starting data quality validation
+2025-06-24 18:39:16,093 - INFO - # Validating products data first because products are referenced in orders (Product ID in orders must exist in products)
+2025-06-24 18:39:16,098 - WARNING - Rows with NaN values in primary key column - product_id are removed
+2025-06-24 18:39:16,098 - WARNING - Duplicate and NaN values found in primary key column product_id
+2025-06-24 18:39:16,099 - WARNING - Null values found in column product_name
+2025-06-24 18:39:16,101 - WARNING - Negative or zero values found in column price
+2025-06-24 18:39:16,104 - WARNING - Negative values found in column stock_quantity
+2025-06-24 18:39:16,105 - WARNING - Null values found in column supplier_id
+2025-06-24 18:39:16,106 - INFO - Starting data quality validation of Orders data
+2025-06-24 18:39:16,109 - WARNING - Rows with NaN values in primary key column - order_id are removed
+2025-06-24 18:39:16,109 - WARNING - Duplicate and NaN values found in primary key column order_id
+2025-06-24 18:39:16,109 - INFO - Validating data quality
+2025-06-24 18:39:16,111 - INFO - Validating data quality
+2025-06-24 18:39:16,111 - INFO - Validating data quality
+2025-06-24 18:39:16,111 - INFO - Validating data quality
+2025-06-24 18:39:16,112 - INFO - Validating data quality
+2025-06-24 18:39:16,112 - INFO - Validating data quality
+2025-06-24 18:39:16,112 - INFO - Validating data quality
+2025-06-24 18:39:16,112 - INFO - Validating data quality
+2025-06-24 18:39:16,112 - INFO - Validating data quality
+2025-06-24 18:39:16,114 - WARNING - Invalid date format found in column order_date; replaced with today's date
+2025-06-24 18:39:16,115 - WARNING - Null values found in column customer_id
+2025-06-24 18:39:16,118 - WARNING - Product IDs not found in products DataFrame: ['PROD999']
+2025-06-24 18:39:16,120 - WARNING - Negative or zero values found in column quantity
+2025-06-24 18:39:16,121 - WARNING - Negative or zero values found in column unit_price
+2025-06-24 18:39:16,121 - INFO - Filled 0 NaN values in 'total_amount' using quantity * unit_price.
+2025-06-24 18:39:16,123 - WARNING - Invalid total amount found in column total_amount
+2025-06-24 18:39:16,126 - WARNING - Invalid values found in column order_status: []
+2025-06-24 18:39:16,129 - WARNING - Logged 8 erroneous records to logs/order_errors_error_records.csv
+2025-06-24 18:39:16,130 - WARNING - Logged 5 erroneous records to logs/products_errors_error_records.csv
+2025-06-24 18:39:16,130 - INFO - Data validation completed successfully
+2025-06-24 18:39:16,131 - INFO - Starting data cleansing
+2025-06-24 18:39:16,139 - INFO - Starting data curation
+2025-06-24 18:39:16,149 - INFO - Aggregated orders data successfully
+2025-06-24 18:39:16,155 - INFO - Merged products and aggregated orders data successfully
+2025-06-24 18:39:16,155 - INFO - Orders Curated DataFrame Successfully Created
+2025-06-24 18:39:16,155 - INFO - Calculating performance metrics for products
+2025-06-24 18:39:16,155 - INFO - Calculating performance rank based on total revenue
+2025-06-24 18:39:16,157 - INFO - Performance rank calculated successfully
+2025-06-24 18:39:16,160 - INFO - Data curation completed successfully
+2025-06-24 18:39:16,160 - INFO - Data pipeline execution completed successfully

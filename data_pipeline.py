@@ -93,6 +93,13 @@ class DataPipeline:
             # Replacing null values with default values.
             if rule == "not_null":
                 null_mask = valid_records[column].isnull()
+                if null_mask.any():
+                    error_df = valid_records[null_mask].copy()
+                    error_df["error_column"] = column
+                    error_df["error_type"] = f"{column} Value is null. Default value being added temporarily"
+                    error_records = pd.concat([error_records, error_df])
+                    self.logger.warning(f"Null values found in column {column}")
+
                 if column == "customer_id":
                     valid_records.loc[null_mask, column] = "CUSTXXX"  # Assigning a default value for customer_id if null
                 elif column == "supplier_id":
@@ -101,13 +108,7 @@ class DataPipeline:
                     valid_records.loc[null_mask, column] = "Unknown Product"
                 elif column == "category":
                     valid_records.loc[null_mask, column] = "Uncategorized"
-                if null_mask.any():
-                    error_df = valid_records[null_mask].copy()
-                    error_df["error_column"] = column
-                    error_df["error_type"] = "Value is null. Default value added temporarily"
-                    error_records = pd.concat([error_records, error_df])
-                    
-                    self.logger.warning(f"Null values found in column {column}")
+                
 
 
             # Primary key validation should be unique and not NaN.
@@ -158,7 +159,6 @@ class DataPipeline:
                     self.logger.warning(f"Negative values found in column {column}")
             
             elif rule == "check_date_format":
-                valid_records[column] = valid_records[column].abs()
                 invalid_date_mask = ~valid_records[column].apply(validate_date_format)
                 if invalid_date_mask.any():
                     error_df = valid_records[invalid_date_mask].copy()
@@ -168,14 +168,24 @@ class DataPipeline:
                     
                     # Replacing invalid dates with today's date
                     # Assuming today's date is the desired replacement for invalid dates
-                    today_str = pd.to_datetime("today").strftime("%Y-%m-%d")  # or your desired format
-                    valid_records.loc[invalid_date_mask, column] = today_str
+                    today_date = pd.Timestamp.today().normalize().date()
+                    valid_records.loc[invalid_date_mask, column] = today_date
 
                     self.logger.warning(f"Invalid date format found in column {column}; replaced with today's date")
 
             # This rule should also eliminate those order records in which price, quantity or amount are null. 
             elif rule == "multiple_of_quantity_unit_price": 
+                valid_records[column] = valid_records[column].abs()
                 if "quantity" in valid_records.columns and "unit_price" in valid_records.columns:
+                    
+                    #Filling NaNs in column by multiplying quantity * unit_price
+                    missing_mask = valid_records[column].isna()
+                    if missing_mask.any():
+                        valid_records.loc[missing_mask, column] = (
+                        valid_records.loc[missing_mask, "quantity"] * valid_records.loc[missing_mask, "unit_price"]
+                    )           
+                    self.logger.info(f"Filled {missing_mask.sum()} NaN values in '{column}' using quantity * unit_price.")
+
                     expected_amount = valid_records["quantity"] * valid_records["unit_price"]
                     invalid_mask = ~np.isclose(valid_records[column], expected_amount, rtol=0.02)
                     
@@ -243,8 +253,7 @@ class DataPipeline:
         
             # Fixing common date format issues – Date Format should be DD-MM-YYYY
             elif col == "order_date":
-                # Coercing should handle any invalid date formats (NaT format)
-                df["order_date"] = pd.to_datetime(df["order_date"], format = "%d-%m-%Y", errors = 'coerce', dayfirst = True)
+                df[col] = pd.to_datetime(df[col], errors='coerce', dayfirst=True).dt.strftime('%d-%m-%Y')
 
         return df
 
