@@ -10,13 +10,14 @@
         "quantity": "positive",
         "unit_price": "positive", 
         "total_amount": "multiple_of_quantity_unit_price",
-        "order_status": ["Pending", "Confirmed", "Cancelled", "Shipped", "Delivered","pending", "confirmed", "cancelled", "shipped", "delivered"]
+        "order_status": ["Pending", "Confirmed", "Cancelled", "Shipped", "Delivered"]
     },
     "products_validation_rules": {
         "product_id": "primary_key", 
         "product_name": "not_null",
         "category": "not_null",
         "price": "positive",
-        "stock_quantity": "non_negative"
+        "stock_quantity": "non_negative",
+        "supplier_id": "not_null"
     }
 }

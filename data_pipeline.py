@@ -90,15 +90,25 @@ class DataPipeline:
                 self.logger.warning(f"Column {column} not found in DataFrame")
                 continue
             
+            # Replacing null values with default values.
             if rule == "not_null":
                 null_mask = valid_records[column].isnull()
+                if column == "customer_id":
+                    df.loc[valid_records[column].isnull(), column] = "CUSTXXX"  # Assigning a default value for customer_id if null
+                elif column == "supplier_id":
+                    df.loc[valid_records[column].isnull(), column] = "SUPXXX"
+                elif column == "product_name":
+                    df.loc[valid_records[column].isnull(), column] = "Unknown Product"
+                elif column == "category":
+                    df.loc[valid_records[column].isnull(), column] = "Uncategorized"
                 if null_mask.any():
                     error_df = valid_records[null_mask].copy()
                     error_df["error_column"] = column
-                    error_df["error_type"] = "Value is Null"
+                    error_df["error_type"] = "Value is null. Default value added temporarily"
                     error_records = pd.concat([error_records, error_df])
-                    valid_records = valid_records[~null_mask]
+                    
                     self.logger.warning(f"Null values found in column {column}")
+
 
             # Primary key validation should be unique and not NaN.
             elif rule == "primary_key":
@@ -106,12 +116,13 @@ class DataPipeline:
                 if duplicates_mask.any():
                     error_df = valid_records[duplicates_mask].copy()
                     error_df["error_column"] = column
-                    error_df["error_type"] = "Duplicates of Primary key is not allowed"
+                    error_df["error_type"] = "Duplicates of Primary key or NaN is not allowed"
                     error_records = pd.concat([error_records, error_df])
                     
                     # Remove duplicates from valid records
                     valid_records = valid_records[~duplicates_mask]
-                    self.logger.warning(f"Duplicate values found in primary key column {column}")
+                    self.logger.warning(f"Rows with NaN values in primary key column - {column} are removed")
+                    self.logger.warning(f"Duplicate and NaN values found in primary key column {column}")
             
             # Handling NaN values in non-negative columns as well.
             elif rule == "positive":
@@ -120,11 +131,14 @@ class DataPipeline:
                 if negative_mask.any():
                     error_df = valid_records[negative_mask].copy()
                     error_df["error_column"] = column
-                    error_df["error_type"] = "Value is not positive or is NaN"
+                    error_df["error_type"] = "Value is not positive or is NaN. Default value added temporarily"
                     error_records = pd.concat([error_records, error_df])
                     
-                    # Remove negative or zero values from valid records
-                    valid_records = valid_records[~negative_mask]
+                    # Using the absolute value to keep the positive values in valid records
+                    
+                    valid_records[column] = valid_records[column].abs()
+                    # NaN values are retained as is, but if we want to replace them with 0, we can uncomment the next line
+                    # df.loc[valid_records[column].isnull(), column] = 0
                     self.logger.warning(f"Negative or zero values found in column {column}")
             
             # Handling NaN values in non-negative columns as well.
@@ -134,11 +148,13 @@ class DataPipeline:
                 if negative_mask.any():
                     error_df = valid_records[negative_mask].copy()
                     error_df["error_column"] = column
-                    error_df["error_type"] = "Value is negative or is NaN"
+                    error_df["error_type"] = "Value is negative or is NaN. Default value added temporarily"
                     error_records = pd.concat([error_records, error_df])
                     
-                    # Remove negative values from valid records
-                    valid_records = valid_records[~negative_mask]
+                    # Using the absolute value to keep the positive values in valid records
+                    # Replacing NaN with 0 (Making assumption that 0 is a valid value for these columns)
+                    valid_records[column] = valid_records[column].abs()
+                    df.loc[valid_records[column].isnull(), column] = 0
                     self.logger.warning(f"Negative values found in column {column}")
             
             elif rule == "check_date_format":
@@ -146,12 +162,16 @@ class DataPipeline:
                 if invalid_date_mask.any():
                     error_df = valid_records[invalid_date_mask].copy()
                     error_df["error_column"] = column
-                    error_df["error_type"] = "Invalid Date Format"
+                    error_df["error_type"] = "Invalid Date Format, defaulting to today's date temporarily"
                     error_records = pd.concat([error_records, error_df])
                     
-                    # Remove invalid date format records from valid records
-                    valid_records = valid_records[~invalid_date_mask]
-                    self.logger.warning(f"Invalid date format found in column {column}")
+                    # Replacing invalid dates with today's date
+                    # Assuming today's date is the desired replacement for invalid dates
+                    today_str = pd.to_datetime("today").strftime("%Y-%m-%d")  # or your desired format
+                    valid_records.loc[invalid_date_mask, column] = today_str
+
+                    self.logger.warning(f"Invalid date format found in column {column}; replaced with today's date")
+
             # This rule should also eliminate those order records in which price, quantity or amount are null. 
             elif rule == "multiple_of_quantity_unit_price": 
                 if "quantity" in valid_records.columns and "unit_price" in valid_records.columns:
@@ -169,7 +189,8 @@ class DataPipeline:
                         self.logger.warning(f"Invalid total amount found in column {column}")
 
             elif isinstance(rule, list):
-                invalid_mask = ~valid_records[column].isin(rule)
+                title_cased_values = valid_records[column].astype(str).str.title()
+                invalid_mask = ~title_cased_values.isin(rule)
                 if invalid_mask.any():
                     error_df = valid_records[invalid_mask].copy()
                     error_df["error_column"] = column
