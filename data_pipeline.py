@@ -100,7 +100,7 @@ class DataPipeline:
                     valid_records = valid_records[~null_mask]
                     self.logger.warning(f"Null values found in column {column}")
 
-            # Primary key validation should be unique and not null.
+            # Primary key validation should be unique and not NaN.
             elif rule == "primary_key":
                 duplicates_mask = valid_records.duplicated(subset=[column], keep = 'first') | valid_records[column].isnull()
                 if duplicates_mask.any():
