@@ -94,13 +94,13 @@ class DataPipeline:
             if rule == "not_null":
                 null_mask = valid_records[column].isnull()
                 if column == "customer_id":
-                    df.loc[valid_records[column].isnull(), column] = "CUSTXXX"  # Assigning a default value for customer_id if null
+                    valid_records.loc[null_mask, column] = "CUSTXXX"  # Assigning a default value for customer_id if null
                 elif column == "supplier_id":
-                    df.loc[valid_records[column].isnull(), column] = "SUPXXX"
+                    valid_records.loc[null_mask, column] = "SUPXXX"
                 elif column == "product_name":
-                    df.loc[valid_records[column].isnull(), column] = "Unknown Product"
+                    valid_records.loc[null_mask, column] = "Unknown Product"
                 elif column == "category":
-                    df.loc[valid_records[column].isnull(), column] = "Uncategorized"
+                    valid_records.loc[null_mask, column] = "Uncategorized"
                 if null_mask.any():
                     error_df = valid_records[null_mask].copy()
                     error_df["error_column"] = column
@@ -154,10 +154,11 @@ class DataPipeline:
                     # Using the absolute value to keep the positive values in valid records
                     # Replacing NaN with 0 (Making assumption that 0 is a valid value for these columns)
                     valid_records[column] = valid_records[column].abs()
-                    df.loc[valid_records[column].isnull(), column] = 0
+                    valid_records.loc[valid_records[column].isnull(), column] = 0
                     self.logger.warning(f"Negative values found in column {column}")
             
             elif rule == "check_date_format":
+                valid_records[column] = valid_records[column].abs()
                 invalid_date_mask = ~valid_records[column].apply(validate_date_format)
                 if invalid_date_mask.any():
                     error_df = valid_records[invalid_date_mask].copy()
@@ -304,9 +305,10 @@ class DataPipeline:
 
         # Step 2: Data Quality Validation
         self.logger.info("Starting data quality validation")
-        self.logger.info("# Cleaning products data first because products are referenced in orders (Product ID in orders must exist in products)")
+        self.logger.info("# Validating products data first because products are referenced in orders (Product ID in orders must exist in products)")
         # Cleaning products data first because products are referenced in orders (Product ID in orders must exist in products)
         valid_products_df, product_errors_df = self.validate_data_quality(products_df, self.products_rules) 
+        self.logger.info("Starting data quality validation of Orders data")
         valid_orders_df, order_errors_df = self.validate_data_quality(orders_df, self.orders_rules)
         
 
@@ -365,9 +367,14 @@ def main():
         print(f"Unexpected error while loading config: {e}. Kindly ensure it exists in the working directory and re-run the script.")
         config = {}
         return
-
-    pipeline = DataPipeline(config)
-    pipeline.run_pipeline()
+    
+    try:
+        pipeline = DataPipeline(config)
+        pipeline.run_pipeline()
+    except Exception as e:
+        logging.error(f"Error during pipeline execution: {e}", exc_info=True)
+        print("An error occurred during pipeline execution. Please check the log file for details.")
+    
 
 if __name__ == "__main__":
     main()

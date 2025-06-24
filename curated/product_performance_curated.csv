@@ -1,7 +1,10 @@
 product_id,product_name,category,price,stock_quantity,supplier_id,total_orders,total_quantity_sold,avg_order_quantity,total_revenue,first_order_date,last_order_date,days_since_last_order,performance_rank
-PROD001,Wireless Headphones,Electronics,25.5,100.0,SUP001,2,4,2.0,101.0,,,,1
+PROD001,Wireless Headphones,Electronics,25.5,100.0,SUP001,3,7,2.33,177.5,,,,1
 PROD002,Coffee Mug,Home & Garden,15.99,50.0,SUP002,1,1,1.0,15.99,,,,3
 PROD003,Notebook Set,Office Supplies,8.75,200.0,SUP001,0,0,0.0,0.0,,,,4
 PROD004,Bluetooth Speaker,Electronics,19.99,75.0,SUP003,0,0,0.0,0.0,,,,4
 PROD005,Travel Backpack,Travel,22.33,30.0,SUP002,1,3,3.0,66.99,,,,2
-PROD009,Desk Lamp,Home & Garden,34.5,15.0,,0,0,0.0,0.0,,,,4
+PROD006,Unknown Product,Electronics,29.99,25.0,SUP004,0,0,0.0,0.0,,,,4
+PROD007,Water Bottle,Sports,5.99,40.0,SUP002,0,0,0.0,0.0,,,,4
+PROD008,Phone Case,Electronics,12.99,0.0,SUP003,0,0,0.0,0.0,,,,4
+PROD009,Desk Lamp,Home & Garden,34.5,15.0,SUPXXX,0,0,0.0,0.0,,,,4

@@ -1,5 +1,6 @@
 product_id,product_name,category,price,stock_quantity,supplier_id,error_column,error_type
-PROD001,Wireless Headphones Duplicate,Electronics,25.5,100.0,SUP001,product_id,Duplicates of Primary key is not allowed
-PROD006,,Electronics,29.99,25.0,SUP004,product_name,Value is Null
-PROD007,Water Bottle,Sports,-5.99,40.0,SUP002,price,Value is not positive or is NaN
-PROD008,Phone Case,Electronics,12.99,,SUP003,stock_quantity,Value is negative or is NaN
+PROD001,Wireless Headphones Duplicate,Electronics,25.5,100.0,SUP001,product_id,Duplicates of Primary key or NaN is not allowed
+PROD006,Unknown Product,Electronics,29.99,25.0,SUP004,product_name,Value is null. Default value added temporarily
+PROD007,Water Bottle,Sports,-5.99,40.0,SUP002,price,Value is not positive or is NaN. Default value added temporarily
+PROD008,Phone Case,Electronics,12.99,,SUP003,stock_quantity,Value is negative or is NaN. Default value added temporarily
+PROD009,Desk Lamp,Home & Garden,34.5,15.0,SUPXXX,supplier_id,Value is null. Default value added temporarily

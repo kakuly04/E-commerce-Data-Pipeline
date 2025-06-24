@@ -4,4 +4,7 @@ PROD002,Coffee Mug,Home & Garden,15.99,50.0,SUP002
 PROD003,Notebook Set,Office Supplies,8.75,200.0,SUP001
 PROD004,Bluetooth Speaker,Electronics,19.99,75.0,SUP003
 PROD005,Travel Backpack,Travel,22.33,30.0,SUP002
-PROD009,Desk Lamp,Home & Garden,34.5,15.0,
+PROD006,Unknown Product,Electronics,29.99,25.0,SUP004
+PROD007,Water Bottle,Sports,5.99,40.0,SUP002
+PROD008,Phone Case,Electronics,12.99,0.0,SUP003
+PROD009,Desk Lamp,Home & Garden,34.5,15.0,SUPXXX
