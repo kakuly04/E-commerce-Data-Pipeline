@@ -355,6 +355,10 @@ class DataPipeline:
 # Assuming price cannot be zero
 # product_id is the primary key. Hence, it cannot be null and must be unique
 # Assuming stock quantity cannot be negative, can be zero
+# Assuming suplier_id quantity cannot be null, replaced with a default value if null
+# Assuming customer_id cannot be null, replaced with a default value if null
+# Assuming product_name cannot be null, replaced with a default value if null
+# Assuming category cannot be null, replaced with a default value if null
 # ---------------------------------------------------------------------------------------------------------
 
 def main():
